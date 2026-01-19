@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+form{
+    width: 90vw;
+    margin: 4rem auto;
+    max-width: 500px;
+    border:  1px solid;
+    border-radius: 8px;
+    padding: 1rem;
+
+    div{
+        margin: 1rem 0;
+    }
+
+    input{
+        display: block;
+        width: 100%;
+        padding: .5rem 0;
+        border: 1.5px solid black;
+    }
+}
+
+
+button{
+    background: black;
+    color: white;
+    width: 100%;
+    padding: .5rem 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+}
+
+button:disabled{
+    background-color: #999;
+    cursor: not-allowed;
+}
