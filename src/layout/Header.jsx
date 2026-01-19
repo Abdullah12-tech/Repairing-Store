@@ -10,7 +10,7 @@ const Header = () => {
       <div className="sticky top-0 z-50">
         <div className="h-4 bg-red-500" />
 
-        <header className="bg-white/80 backdrop-blur-xl border-b">
+        <header className="bg-white border-b">
           <div className="max-w-7xl mx-auto px-6 md:px-16 h-20 flex items-center justify-between">
             
             {/* Logo */}
