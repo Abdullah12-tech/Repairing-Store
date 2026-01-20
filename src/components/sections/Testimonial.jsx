@@ -65,9 +65,8 @@ const reviews = [
   },
 ];
 
-
 const Stars = ({ rating }) => (
-  <div className="flex gap-1 text-yellow-400">
+  <div className="flex gap-1 text-tertiary">
     {Array.from({ length: 5 }).map((_, i) => (
       <span key={i}>{i < rating ? '★' : '☆'}</span>
     ))}
@@ -76,60 +75,59 @@ const Stars = ({ rating }) => (
 
 const Testimonials = () => {
   return (
-    <section className="py-24 bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+    <section className="py-24 bg-gradient-to-br from-primary via-red-800 to-black text-white">
 
       {/* 🔹 Component-scoped CSS */}
       <style>{`
-  .testimonial-swiper {
-    padding-bottom: 60px;
-  }
+        .testimonial-swiper {
+          padding-bottom: 60px;
+        }
 
-  /* 🔹 Center arrows vertically */
-  .testimonial-swiper .swiper-button-next,
-  .testimonial-swiper .swiper-button-prev {
-    top: 50%;
-    transform: translateY(-50%);
-    color: white;
-    width: 44px;
-    height: 44px;
-  }
+        /* 🔹 Center arrows vertically */
+        .testimonial-swiper .swiper-button-next,
+        .testimonial-swiper .swiper-button-prev {
+          top: 50%;
+          transform: translateY(-50%);
+          color: white;
+          width: 44px;
+          height: 44px;
+        }
 
-  /* Optional: move arrows slightly outward */
-  .testimonial-swiper .swiper-button-prev {
-    left: -10px;
-  }
+        /* Optional: move arrows slightly outward */
+        .testimonial-swiper .swiper-button-prev {
+          left: -10px;
+        }
 
-  .testimonial-swiper .swiper-button-next {
-    right: -10px;
-  }
+        .testimonial-swiper .swiper-button-next {
+          right: -10px;
+        }
 
-  /* 🔹 Make arrows cleaner */
-  .testimonial-swiper .swiper-button-next::after,
-  .testimonial-swiper .swiper-button-prev::after {
-    font-size: 20px;
-    font-weight: bold;
-  }
+        /* 🔹 Make arrows cleaner */
+        .testimonial-swiper .swiper-button-next::after,
+        .testimonial-swiper .swiper-button-prev::after {
+          font-size: 20px;
+          font-weight: bold;
+        }
 
-  /* 🔹 Pagination positioning */
-  .testimonial-swiper .swiper-pagination {
-    bottom: 0 !important;
-  }
+        /* 🔹 Pagination positioning */
+        .testimonial-swiper .swiper-pagination {
+          bottom: 0 !important;
+        }
 
-  /* 🔹 Smaller dots */
-  .testimonial-swiper .swiper-pagination-bullet {
-    width: 8px;
-    height: 8px;
-    background: #9ca3af;
-    opacity: 1;
-    transition: all 0.3s ease;
-  }
+        /* 🔹 Smaller dots */
+        .testimonial-swiper .swiper-pagination-bullet {
+          width: 8px;
+          height: 8px;
+          background: #fca5a5;
+          opacity: 1;
+          transition: all 0.3s ease;
+        }
 
-  .testimonial-swiper .swiper-pagination-bullet-active {
-    background: linear-gradient(135deg, #6366f1, #ec4899);
-    transform: scale(1.3);
-  }
-`}</style>
-
+        .testimonial-swiper .swiper-pagination-bullet-active {
+          background: linear-gradient(135deg, #f43f5e, #fb7185);
+          transform: scale(1.3);
+        }
+      `}</style>
 
       <div className="container mx-auto px-6">
         <h2 className="text-4xl font-bold text-center mb-14">
@@ -155,12 +153,9 @@ const Testimonials = () => {
           }}
           className="testimonial-swiper"
         >
-
-
           {reviews.map((review) => (
             <SwiperSlide key={review.id}>
               <div className="h-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-lg transition-all duration-500">
-
                 <Stars rating={review.rating} />
 
                 <p className="mt-4 text-gray-200 italic">
@@ -171,7 +166,6 @@ const Testimonials = () => {
                   <span className="font-semibold">{review.name}</span>
                   <span className="text-sm text-gray-400">{review.date}</span>
                 </div>
-
               </div>
             </SwiperSlide>
           ))}

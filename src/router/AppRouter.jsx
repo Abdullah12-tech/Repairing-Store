@@ -6,7 +6,7 @@ import Footer from '../layout/Footer'
 import PageNotFound from '../pages/pageNotFound'
 
 const Shell = () => (
-  <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+  <div style={{ minHeight: '100vh', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
     <Header />
     <main className="container``">
       <Outlet />

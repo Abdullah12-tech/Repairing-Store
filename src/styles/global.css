@@ -1,5 +1,7 @@
 :root {
   --hero-bg: url('https://images.unsplash.com/photo-1602524812315-6e56bfb7c2f4?auto=format&fit=crop&w=1600&q=80');
-  --primary: 16 185 129;   /* emerald-500 */
-  --secondary: 234 179 8;  /* yellow-500 */
+  --primary: 231, 35, 41; /* glossy bright red */
+  --secondary: 255 255 255;  /* white */
+  --advanced: 17 24 39;  /* near-black (slate-900) */
+  --tertiary: 250 204 21; /* yellow-400 */
 }

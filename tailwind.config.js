@@ -11,6 +11,8 @@ module.exports = {
       colors: {
         primary: "rgb(var(--primary))",
         secondary: "rgb(var(--secondary))",
+        advanced: "rgb(var(--advanced))",
+        tertiary: "rgb(var(--tertiary))",
       },
     },
   },

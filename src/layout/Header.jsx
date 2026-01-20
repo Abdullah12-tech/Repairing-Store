@@ -1,4 +1,6 @@
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { DiVisualstudio } from "react-icons/di";
 import { Link } from "react-router-dom";
 
 const Header = () => {
@@ -8,25 +10,25 @@ const Header = () => {
     <>
       {/* Top accent bar */}
       <div className="sticky top-0 z-50">
-        <div className="h-4 bg-red-500" />
+        <div className="h-4 bg-primary" />
 
-        <header className="bg-white border-b">
-          <div className="max-w-7xl mx-auto px-6 md:px-16 h-20 flex items-center justify-between">
-            
+        <header className="bg-secondary border-b">
+          <div className="max-w-[1300px] mx-auto px-6 md:px-16 h-20 flex items-center justify-between">
+
             {/* Logo */}
-            <div className="text-2xl font-black tracking-tight text-red-600">
+            <div className="text-2xl font-black tracking-tight text-primary">
               ThePhoneLab<span className="text-black">®</span>
             </div>
 
             {/* Desktop Nav */}
-            <nav className="hidden lg:flex gap-10 text-gray-700 font-medium">
-              {["Repairs", "Stores", "Prices", "Support", "Business"].map((item) => (
+            <nav className="hidden lg:flex gap-10 text-advanced font-medium">
+              {["Repairs", "About Us", "Prices", "Support", "Business"].map((item) => (
                 <span
                   key={item}
                   className="relative cursor-pointer group"
                 >
                   {item}
-                  <span className="absolute left-1/2 bottom-[-6px] h-[2px] w-0 bg-red-500 transition-all duration-300 group-hover:w-full group-hover:left-0" />
+                  <span className="absolute left-1/2 bottom-[-6px] h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full group-hover:left-0" />
                 </span>
               ))}
             </nav>
@@ -34,32 +36,25 @@ const Header = () => {
             {/* CTA + Hamburger */}
             <div className="flex items-center gap-4">
               <Link
-                className="hidden sm:inline-flex px-5 py-2 rounded-full bg-black text-white hover:bg-yellow-400 hover:text-black transition-all"
+                className="hidden sm:inline-flex px-5 py-2  bg-primary text-secondary transition-all"
               >
                 Book Appointment
               </Link>
 
               {/* Hamburger */}
-              <button
+              <div
+                role="button"
+                tabIndex={0}
                 onClick={() => setOpen(!open)}
-                className="lg:hidden relative w-10 h-10 flex items-center justify-center"
+                onKeyDown={(e) => e.key === "Enter" && setOpen(!open)}
+                className="lg:hidden w-10 h-10 border-none active:border-none bg-secondary flex items-center justify-center"
               >
-                <span
-                  className={`absolute h-[2px] w-6 bg-black transition-all duration-300 ${
-                    open ? "rotate-45 translate-y-0" : "-translate-y-2"
-                  }`}
-                />
-                <span
-                  className={`absolute h-[2px] w-6 bg-black transition-all duration-300 ${
-                    open ? "opacity-0" : ""
-                  }`}
-                />
-                <span
-                  className={`absolute h-[2px] w-6 bg-black transition-all duration-300 ${
-                    open ? "-rotate-45 translate-y-0" : "translate-y-2"
-                  }`}
-                />
-              </button>
+                {open ? (
+                  <X size={40} className="text-advanced transition" />
+                ) : (
+                  <Menu size={40} className="text-advanced transition" />
+                )}
+              </div>
             </div>
           </div>
         </header>
@@ -67,7 +62,7 @@ const Header = () => {
 
       {/* Mobile Radial Menu */}
       <div
-        className={`fixed inset-0 z-40 bg-black text-white transition-all duration-500 ease-in-out
+        className={`fixed inset-0 z-40 bg-secondary text-primary transition-all duration-500 ease-in-out
         ${open ? "clip-open" : "clip-closed"}`}
       >
         <nav className="h-full flex flex-col items-center justify-center gap-10 text-3xl font-semibold">
@@ -75,7 +70,7 @@ const Header = () => {
             <span
               key={item}
               onClick={() => setOpen(false)}
-              className="hover:text-yellow-400 transition cursor-pointer"
+              className="hover:text-tertiary transition cursor-pointer"
             >
               {item}
             </span>
@@ -83,7 +78,7 @@ const Header = () => {
 
           <Link
             onClick={() => setOpen(false)}
-            className="mt-8 px-8 py-3 rounded-full bg-yellow-400 text-black font-bold"
+            className="mt-8 px-8 py-4 bg-tertiary text-black font-bold"
           >
             Book Appointment
           </Link>

@@ -1,4 +1,7 @@
 import ServiceCard from "../card/repairCard";
+import ServiceAccordion from "../card/serviceAccordion";
+
+
 const repairServices = [
   {
     id: 1,
@@ -9,7 +12,7 @@ const repairServices = [
       "Screen cracked? Battery draining too fast? We repair all iPhone models with high-quality parts and quick turnaround.",
     linkText: "See all iPhone repairs",
   },
-  {
+   {
     id: 2,
     brand: "Samsung",
     title: "Samsung Repair",
@@ -53,29 +56,47 @@ const repairServices = [
     description:
       "Fast Xiaomi repairs for screen, battery, camera, or software issues. We use quality parts and provide professional support.",
     linkText: "See all Xiaomi repairs",
-  },
+  }
 ];
-
 
 const RepairSection = () => {
   return (
-    <section className="bg-gray-100 py-14">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="bg-secondary py-2">
+      <div className="max-w-[1300px] px-3 mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {repairServices.map((service) => (
-            <ServiceCard
-              key={service.id}
-              icon={
-                <img
-                  src={service.icon}
-                  alt={service.brand}
-                  className="w-8 h-8 object-contain"
+            <div key={service.id}>
+              {/* Mobile accordion */}
+              <div className="md:hidden">
+                <ServiceAccordion
+                  {...service}
+                  icon={
+                    <img
+                      src={service.icon}
+                      alt={service.brand}
+                      className="w-8 h-8"
+                    />
+                  }
                 />
-              }
-              title={service.title}
-              description={service.description}
-              linkText={service.linkText}
-            />
+              </div>
+            </div>
+          ))}
+          {repairServices.map((service) => (
+            <div key={service.id}>
+              {/* Desktop card */}
+              <div className="">
+                <ServiceCard
+                  {...service}
+                  icon={
+                    <img
+                      src={service.icon}
+                      alt={service.brand}
+                      className="w-8 h-8"
+                    />
+                  }
+                />
+              </div>
+            </div>
           ))}
         </div>
       </div>

@@ -61,11 +61,7 @@ const Footer = () => {
         </div>
       </div>
       {/* Floating Contact Button */}
-      <button
-        className="fixed max-w-[100px] text-center p-4 bottom-6 right-6 bg-yellow-400 text-black font-semibold rounded-full shadow-lg hover:scale-105 transition"
-      >
-        CONTACT
-      </button>
+      
     </footer>
   );
 };
