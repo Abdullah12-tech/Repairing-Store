@@ -13,7 +13,7 @@ const Header = () => {
         <div className="h-4 bg-primary" />
 
         <header className="bg-secondary border-b">
-          <div className="max-w-[1300px] mx-auto px-6 md:px-16 h-20 flex items-center justify-between">
+          <div className="max-w-[1450px] mx-auto px-6 md:px-16 h-20 flex items-center justify-between">
 
             {/* Logo */}
             <div className="text-2xl font-black tracking-tight text-primary">

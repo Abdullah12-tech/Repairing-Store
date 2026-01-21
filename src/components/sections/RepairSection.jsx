@@ -61,7 +61,7 @@ const repairServices = [
 
 const RepairSection = () => {
   return (
-    <section className="bg-secondary py-2">
+    <section className="bg-secondary py-10">
       <div className="max-w-[1300px] px-3 mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {repairServices.map((service) => (
