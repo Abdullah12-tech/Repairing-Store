@@ -1,7 +1,7 @@
 const HeroSection = () => {
   return (
     <section
-      className="relative max-w-[1200px] m-auto min-h-[60vh] flex items-center justify-center bg-primary"
+      className="relative max-w-[1150px] m-auto min-h-[65vh] flex items-center justify-center bg-primary"
     >
       {/* Gradient Overlay */}
 
