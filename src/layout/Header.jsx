@@ -23,19 +23,20 @@ const Header = () => {
             {/* Desktop Nav */}
             <nav className="hidden lg:flex gap-10 text-advanced font-medium">
               {["Repairs", "About Us", "Prices", "Support", "Business"].map((item) => (
-                <span
+                <Link
+                  to={`/${item.toLocaleLowerCase().replace(/\s+/g, "")}`}
                   key={item}
                   className="relative cursor-pointer group"
                 >
                   {item}
                   <span className="absolute left-1/2 bottom-[-6px] h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full group-hover:left-0" />
-                </span>
+                </Link>
               ))}
             </nav>
 
             {/* CTA + Hamburger */}
             <div className="flex items-center gap-4">
-              <Link
+              <Link to={"/repairs"}
                 className="hidden sm:inline-flex px-5 py-2  bg-primary text-secondary transition-all"
               >
                 Book Appointment
@@ -67,13 +68,14 @@ const Header = () => {
       >
         <nav className="h-full flex flex-col items-center justify-center gap-10 text-3xl font-semibold">
           {["Repairs", "Stores", "Prices", "Support", "Business"].map((item) => (
-            <span
+            <Link
               key={item}
+              to={`/${item.toLocaleLowerCase()}`}
               onClick={() => setOpen(false)}
               className="hover:text-tertiary transition cursor-pointer"
             >
               {item}
-            </span>
+            </Link>
           ))}
 
           <Link
