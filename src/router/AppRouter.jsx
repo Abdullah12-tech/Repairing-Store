@@ -11,6 +11,8 @@ import SelectModel from '../pages/ModelPage'
 import SelectParts from '../pages/PartsPage'
 import PricingPage from '../pages/PricingPage'
 import AboutRepairStore from '../pages/AboutPage'
+import AppointmentSuccess from '../pages/AppointmentConfirm'
+import AppointmentPage from '../pages/AppointmentBook'
 
 const Shell = () => (
   <div style={{ minHeight: '100vh', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
@@ -40,6 +42,8 @@ export default function AppRouter() {
             <Route path="/repairs/:modelId" element={<SelectParts />} />
             <Route path="/prices" element={<PricingPage />} />
             <Route path="/aboutus" element={<AboutRepairStore />} />
+            <Route path="/appointment" element={<AppointmentPage />} />
+            <Route path="/appointment-success" element={<AppointmentSuccess />} />
           </Route>
         </Routes>
       </RepairsProvider>
