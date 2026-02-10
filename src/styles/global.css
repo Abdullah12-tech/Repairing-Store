@@ -5,3 +5,25 @@
   --advanced: 17 24 39;  /* near-black (slate-900) */
   --tertiary: 250 204 21; /* yellow-400 */
 }
+
+
+/* Updated CSS for enhanced micro-interactions */
+
+/* Button Styles */
+.btn-primary {
+  @apply bg-[rgb(var(--primary))] text-[rgb(var(--secondary))] font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-300;
+}
+
+.btn-secondary {
+  @apply border border-[rgb(var(--primary))] text-[rgb(var(--primary))] font-semibold py-3 px-6 rounded-lg transition-all duration-300;
+}
+
+/* Input Styles */
+.input {
+  @apply block w-full p-3 border border-gray-300 rounded-lg outline-none transition-all duration-200;
+}
+
+/* Additional for stepper */
+.relative .absolute {
+  z-index: -1;
+}
