@@ -24,9 +24,11 @@ const SelectParts = () => {
         ]);
 
         if (!active) return;
-
+        console.log(pricesRes?.data);
         setParts(partsRes?.data || []);
         setPrices(pricesRes?.data || []);
+        
+        
       } catch (err) {
         console.error("Failed to load parts or prices", err);
       } finally {
@@ -53,18 +55,34 @@ const SelectParts = () => {
       state: {
         phoneModelId: modelId,
         phonePartId: part.id,
-        repairPriceId: price.repairPriceId,
+        repairPriceId: price.id,
         partName: part.name,
         cost: price.cost,
-        duration: price.duration,
+        dUration: price.dUration,
       },
     });
   };
 
   if (loadingParts || loadingPrices) {
     return (
-      <section className="max-w-5xl mx-auto px-6 py-16 text-center">
-        <p className="text-gray-500">Loading repair options...</p>
+      <section className="max-w-5xl mx-auto px-6 py-16 flex items-center justify-center min-h-[40vh]">
+
+        <div className="relative flex items-center justify-center">
+
+          {/* Outer Rotating Ring */}
+          <div className="w-20 h-20 rounded-full border-2 border-[var(--tertiary)]/20 animate-spin"></div>
+
+          {/* Inner Reverse Spin Ring */}
+          <div className="absolute w-14 h-14 rounded-full border-2 border-transparent border-t-[var(--tertiary)] border-r-[var(--tertiary)] animate-[spin_1.2s_linear_reverse_infinite]"></div>
+
+          {/* Pulsing Core */}
+          <div className="absolute w-4 h-4 bg-[var(--tertiary)] rounded-full animate-ping opacity-75"></div>
+
+          {/* Solid Core */}
+          <div className="absolute w-3 h-3 bg-[var(--tertiary)] rounded-full"></div>
+
+        </div>
+
       </section>
     );
   }
@@ -72,7 +90,7 @@ const SelectParts = () => {
   if (!parts.length) {
     return (
       <section className="max-w-5xl mx-auto px-6 py-16 text-center">
-        <p className="text-gray-500">
+        <p className="text-tertiary">
           No repair parts available for this model.
         </p>
       </section>
@@ -94,8 +112,8 @@ const SelectParts = () => {
               key={part.id}
               onClick={() => handleSelectPart(part)}
               disabled={!price}
-              className={`border rounded-lg p-4 text-left transition
-                ${price ? "hover:shadow cursor-pointer" : "opacity-50 cursor-not-allowed"}
+              className={`border bg-secondary rounded-lg p-4 text-left transition shadow-sm
+                ${price ? "hover:shadow-md cursor-pointer" : "opacity-50 cursor-not-allowed"}
               `}
             >
               <img
@@ -109,11 +127,11 @@ const SelectParts = () => {
               </p>
 
               {price ? (
-                <p className="text-center text-sm text-gray-600 mt-1">
+                <p className="text-center text-sm text-tertiary mt-1">
                   ${price.cost} · {price.duration} mins
                 </p>
               ) : (
-                <p className="text-center text-sm text-gray-400 mt-1">
+                <p className="text-center text-sm text-tertiary mt-1">
                   Not available
                 </p>
               )}

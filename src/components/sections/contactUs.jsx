@@ -19,7 +19,7 @@ const ContactUs = () => {
 
         {/* Content */}
         <div className="text-center md:text-left">
-          <h3 className="text-red-600 text-xl font-semibold mb-2">
+          <h3 className="text-primary text-xl font-semibold mb-2">
             Need help?
           </h3>
 
@@ -27,7 +27,7 @@ const ContactUs = () => {
             Contact one of our specialists
           </p>
 
-          <button className="bg-yellow-400 hover:bg-yellow-500 transition px-6 py-3 font-semibold rounded shadow">
+          <button className="bg-tertiary hover:bg-tertiary transition px-6 py-3 font-semibold rounded shadow">
             GET IN TOUCH
           </button>
 

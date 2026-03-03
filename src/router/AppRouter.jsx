@@ -13,6 +13,7 @@ import PricingPage from '../pages/PricingPage'
 import AboutRepairStore from '../pages/AboutPage'
 import AppointmentSuccess from '../pages/AppointmentConfirm'
 import AppointmentPage from '../pages/AppointmentBook'
+import ScrollToTop from '../utils/scrollToTop'
 
 const Shell = () => (
   <div style={{ minHeight: '100vh', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
@@ -22,6 +23,9 @@ const Shell = () => (
     </main>
     <Testimonials />
     <ContactUs />
+    <button className="fixed z-50 max-w-[100px] text-center p-4 bottom-6 right-6 bg-yellow-400 text-black font-semibold rounded-full shadow-lg hover:scale-105 transition"
+            >CONTACT
+            </button>
     <Footer />
   </div>
 )
@@ -33,6 +37,7 @@ function ShellWrapper() {
 export default function AppRouter() {
   return (
     <BrowserRouter>
+      <ScrollToTop/>
       <RepairsProvider>
         <Routes>
           <Route element={<ShellWrapper />}>

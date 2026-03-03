@@ -1,22 +1,23 @@
 // src/pages/AppointmentPage.jsx
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRepair } from "../context/PhonesContext";
-import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const AppointmentPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { loading: contextLoading } = useRepair();
 
   if (!state) {
     navigate("/");
     return null;
   }
 
-  const [step, setStep] = useState(1);
+  console.log(state);
+  
+  const [step, setStep] = useState(0);
   const [form, setForm] = useState({
-    repairPriceId: state.repairPriceId,
+    repairPriceId: state?.repairPriceId || "",
     appointmentDay: "",
     appointmentTime: "",
     customerFirstName: "",
@@ -29,580 +30,390 @@ const AppointmentPage = () => {
     comment: "",
   });
 
-  const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoadingPage, setIsLoadingPage] = useState(true);
+  const [shake, setShake] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const steps = [
-    { id: 1, title: "Repair Summary" },
-    { id: 2, title: "Date & Time" },
-    { id: 3, title: "Your Details" },
-    { id: 4, title: "Confirm" },
+    { id: "service", label: "Service" },
+    { id: "when", label: "Schedule" },
+    { id: "who", label: "Details" },
+    { id: "where", label: "Location" },
+    { id: "lock", label: "Confirm" },
   ];
 
-  // Simulate initial loading (e.g., if fetching data; adjust as needed)
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoadingPage(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
+  const timeSlots = [
+    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+    "12:00", "12:30", "13:00", "13:30", "14:00", "14:30"
+  ];
 
-  const computeValidation = (currentStep) => {
-    let valid = true;
-    let newErrors = {};
-    if (currentStep === 2) {
-      if (!form.appointmentDay) {
-        newErrors.appointmentDay = "Required";
-        valid = false;
-      }
-      if (!form.appointmentTime) {
-        newErrors.appointmentTime = "Required";
-        valid = false;
-      }
-    }
-    if (currentStep === 3) {
-      if (!form.customerFirstName) {
-        newErrors.customerFirstName = "Required";
-        valid = false;
-      }
-      if (!form.customerLastname) {
-        newErrors.customerLastname = "Required";
-        valid = false;
-      }
-      if (!form.customerEmail) {
-        newErrors.customerEmail = "Required";
-        valid = false;
-      } else if (!/\S+@\S+\.\S+/.test(form.customerEmail)) {
-        newErrors.customerEmail = "Invalid email";
-        valid = false;
-      }
-      if (!form.customerPhoneNumber) {
-        newErrors.customerPhoneNumber = "Required";
-        valid = false;
-      } else if (!/^\d{7,15}$/.test(form.customerPhoneNumber)) {
-        newErrors.customerPhoneNumber = "Invalid phone";
-        valid = false;
-      }
-    }
-    return { valid, errors: newErrors };
-  };
-
-  useEffect(() => {
-    const { errors: newErrors } = computeValidation(step);
-    setErrors(newErrors);
-  }, [step]);
-
-  const next = () => {
-    const { valid, errors: newErrors } = computeValidation(step);
-    setErrors(newErrors);
-    if (valid) {
-      setStep((s) => Math.min(s + 1, steps.length));
-    } else {
-      Object.keys(newErrors).forEach((key) => {
-        if (newErrors[key]) controls[key].start("shake");
-      });
+  const handleNext = () => {
+    if (step < 4) {
+      setStep(step + 1);
+      setErrorMsg("");
     }
   };
 
-  const back = () => setStep((s) => Math.max(s - 1, 1));
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-    validateField(name, value);
-  };
-
-  const validateField = (name, value) => {
-    let newErrors = { ...errors };
-    switch (name) {
-      case "appointmentDay":
-      case "appointmentTime":
-      case "customerFirstName":
-      case "customerLastname":
-        newErrors[name] = value ? "" : "Required";
-        break;
-      case "customerEmail":
-        newErrors[name] = !value
-          ? "Required"
-          : !/\S+@\S+\.\S+/.test(value)
-          ? "Invalid email"
-          : "";
-        break;
-      case "customerPhoneNumber":
-        newErrors[name] = !value
-          ? "Required"
-          : !/^\d{7,15}$/.test(value)
-          ? "Invalid phone"
-          : "";
-        break;
-      default:
-        break;
+  const handleBack = () => {
+    if (step > 0) {
+      setStep(step - 1);
+      setErrorMsg("");
     }
-    setErrors(newErrors);
   };
 
-  const submitAppointment = async () => {
+  const handleSubmit = async () => {
     setIsSubmitting(true);
+    setErrorMsg("");
+
+    // Build payload exactly as API expects
     const payload = {
-      ...form,
-      appointmentDay: new Date(
-        `${form.appointmentDay}T${form.appointmentTime}`
-      ).toISOString(),
+      repairPriceId: form.repairPriceId, // Keep as string (GUID)
+      appointmentDay: new Date(`${form.appointmentDay}T${form.appointmentTime}`).toISOString(),
+      appointmentTime: form.appointmentTime,
+      customerFirstName: form.customerFirstName,
+      customerLastname: form.customerLastname,
+      customerEmail: form.customerEmail,
+      customerPhoneNumber: form.customerPhoneNumber,
+      customerAddress: form.customerAddress,
+      customerCity: form.customerCity,
+      customerState: form.customerState,
+      comment: form.comment || "",
     };
 
+    console.log("Sending payload:", JSON.stringify(payload, null, 2));
+
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/api/Appointments`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      const url = `${import.meta.env.VITE_BASE_URL}/api/Appointments`;
+      
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const responseData = await res.json();
+      console.log("Response:", responseData);
 
       if (!res.ok) {
-        alert("Failed to book appointment");
-        return;
+        let errorMessage = "Validation failed";
+        
+        if (responseData.errors) {
+          const errors = Object.entries(responseData.errors)
+            .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(", ") : value}`)
+            .join("; ");
+          errorMessage = errors;
+        } else if (responseData.title) {
+          errorMessage = responseData.title;
+        } else if (responseData.message) {
+          errorMessage = responseData.message;
+        }
+        
+        throw new Error(errorMessage);
       }
-      console.log(await res.json());
 
       navigate("/appointment-success", {
         state: { email: form.customerEmail },
       });
+      
+    } catch (err) {
+      console.error("Booking failed:", err);
+      setErrorMsg(err.message || "Failed to book appointment");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  useEffect(() => {
-    const firstInput = document.querySelector(`.step-${step} input, .step-${step} textarea`);
-    if (firstInput) firstInput.focus();
-  }, [step]);
-
-  const controls = {
-    appointmentDay: useAnimation(),
-    appointmentTime: useAnimation(),
-    customerFirstName: useAnimation(),
-    customerLastname: useAnimation(),
-    customerEmail: useAnimation(),
-    customerPhoneNumber: useAnimation(),
-    customerAddress: useAnimation(),
-    customerCity: useAnimation(),
-    customerState: useAnimation(),
-    comment: useAnimation(),
+  const validateStep = () => {
+    if (step === 1) {
+      if (!form.appointmentDay || !form.appointmentTime) {
+        setShake(true);
+        setTimeout(() => setShake(false), 400);
+        return false;
+      }
+    }
+    if (step === 2) {
+      const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.customerEmail);
+      const phoneValid = /^\d{7,15}$/.test(form.customerPhoneNumber?.replace(/\s/g, ''));
+      if (!form.customerFirstName || !form.customerLastname || !emailValid || !phoneValid) {
+        setShake(true);
+        setTimeout(() => setShake(false), 400);
+        return false;
+      }
+    }
+    if (step === 3) {
+      if (!form.customerAddress || !form.customerCity || !form.customerState) {
+        setShake(true);
+        setTimeout(() => setShake(false), 400);
+        return false;
+      }
+    }
+    return true;
   };
 
-  const inputVariants = {
-    shake: {
-      x: [0, -5, 5, -5, 5, 0],
-      transition: { duration: 0.5 },
-    },
-    focus: {
-      scale: 1.02,
-      borderColor: "rgb(var(--tertiary))",
-      boxShadow: "0 0 0 3px rgba(var(--tertiary), 0.3)",
-      transition: { duration: 0.2 },
-    },
-    blur: {
-      scale: 1,
-      borderColor: "rgb(209, 213, 219)",
-      boxShadow: "none",
-      transition: { duration: 0.2 },
-    },
+  const handleContinue = () => {
+    if (validateStep()) {
+      handleNext();
+    }
   };
-
-  const buttonVariants = {
-    hover: { scale: 1.05, backgroundColor: "rgba(var(--primary), 0.9)" },
-    tap: { scale: 0.95 },
-  };
-
-  const loadingOverlayVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.3 } },
-  };
-
-  const spinnerVariants = {
-    spin: {
-      rotate: 360,
-      transition: { duration: 2, repeat: Infinity, ease: "linear" },
-    },
-  };
-
-  const pulseVariants = {
-    pulse: {
-      scale: [1, 1.2, 1],
-      opacity: [0.7, 1, 0.7],
-      transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
-    },
-  };
-
-  if (isLoadingPage) {
-    return (
-      <motion.div
-        className="fixed inset-0 bg-[rgb(var(--secondary))] flex flex-col items-center justify-center z-50"
-        variants={loadingOverlayVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <motion.div
-          className="text-[rgb(var(--primary))] text-6xl mb-4"
-          variants={spinnerVariants}
-          animate="spin"
-        >
-          🔧
-        </motion.div>
-        <motion.p
-          className="text-[rgb(var(--advanced))] text-xl font-semibold"
-          variants={pulseVariants}
-          animate="pulse"
-        >
-          Preparing your repair journey...
-        </motion.p>
-      </motion.div>
-    );
-  }
 
   return (
-    <section className="max-w-3xl mx-auto px-6 py-12 bg-[rgb(var(--secondary))] rounded-xl shadow-2xl" style={{ backgroundImage: 'linear-gradient(to bottom right, rgba(255,255,255,0.95), rgba(250,204,21,0.05))' }}>
-      <h2 className="text-3xl font-extrabold mb-8 text-center text-[rgb(var(--advanced))]">Book Your Repair Appointment</h2>
-
-      <div className="flex justify-between mb-12">
-        {steps.map((s, index) => (
-          <div key={s.id} className="flex flex-col items-center relative flex-1">
-            <motion.div
-              className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${
-                step >= s.id ? "bg-[rgb(var(--primary))] text-[rgb(var(--secondary))]" : "bg-gray-200 text-gray-500"
-              }`}
-              whileHover={{ scale: 1.2, rotate: 5 }}
-              animate={{ scale: step === s.id ? 1.1 : 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              {s.id}
-            </motion.div>
-            <p className="mt-2 text-sm font-medium text-[rgb(var(--advanced))]">{s.title}</p>
-            {index < steps.length - 1 && (
-              <motion.div
-                className="absolute top-5 left-1/2 w-full h-0.5"
-                style={{ transform: "translateX(50%)" }}
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: step > s.id ? 1 : 0, backgroundColor: step > s.id ? "rgb(var(--primary))" : "gray" }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-              />
-            )}
-          </div>
-        ))}
+    <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center p-4">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/20 rounded-full blur-[100px]" />
       </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={step}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -50 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          className={`step-${step}`}
-        >
-          {step === 1 && (
-            <div className="bg-[rgb(var(--secondary))] p-6 rounded-lg shadow-md border border-[rgb(var(--tertiary))]/30">
-              <h3 className="font-semibold text-xl mb-4 text-[rgb(var(--advanced))] flex items-center">
-                <motion.span className="mr-2" initial={{ rotate: -10 }} animate={{ rotate: 0 }} transition={{ duration: 0.3 }}>🔧</motion.span> Repair Summary
-              </h3>
-              <div className="space-y-2 text-[rgb(var(--advanced))]">
-                <p className="font-medium">{state.partName}</p>
-                <p className="text-lg font-bold text-[rgb(var(--primary))]">${state.cost}</p>
-                <p className="text-sm italic">{state.duration} mins estimated</p>
-              </div>
-              <p className="mt-4 text-sm text-gray-600">We'll get your device back to life in no time!</p>
-              <motion.button
-                onClick={next}
-                className="btn-primary mt-6 w-full flex items-center justify-center"
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
+      <div className="relative w-full max-w-md z-10">
+        {/* Progress */}
+        <div className="flex items-center justify-center gap-1 mb-6">
+          {steps.map((s, i) => (
+            <div key={s.id} className="flex items-center">
+              <div className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                i === step ? "bg-white scale-125" : i < step ? "bg-emerald-500" : "bg-white/20"
+              }`} />
+              {i < 4 && <div className={`w-6 h-px mx-0.5 ${i < step ? "bg-emerald-500" : "bg-white/10"}`} />}
+            </div>
+          ))}
+          <span className="ml-2 text-xs text-white/40">{step + 1}/5</span>
+        </div>
+
+        {/* Error Message */}
+        {errorMsg && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-xl text-sm text-red-200"
+          >
+            <p className="text-xs break-words">{errorMsg}</p>
+          </motion.div>
+        )}
+
+        {/* Card */}
+        <div className="bg-white/5 backdrop-blur border border-white/10 rounded-3xl p-6 min-h-[520px] relative overflow-hidden">
+          <AnimatePresence mode="wait">
+            
+            {/* Step 0: Service */}
+            {step === 0 && (
+              <motion.div
+                key="step0"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="h-full flex flex-col"
               >
-                Continue <motion.span className="ml-2" animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1 }}>→</motion.span>
-              </motion.button>
-            </div>
-          )}
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-4 text-xl">
+                  🔧
+                </div>
+                <h2 className="text-2xl font-semibold mb-1">{state?.partName}</h2>
+                <p className="text-white/50 text-sm mb-6">{state?.duration} min • Same-day</p>
+                <div className="bg-black/20 rounded-2xl p-4 mb-6">
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-white/60 text-sm">Total</span>
+                    <span className="text-3xl font-bold">${state?.cost}</span>
+                  </div>
+                  <div className="h-px bg-white/10 my-3" />
+                  <div className="flex gap-4 text-xs text-white/40">
+                    <span>✓ Certified parts</span>
+                    <span>✓ 90-day warranty</span>
+                  </div>
+                </div>
+                <div className="mt-auto">
+                  <button
+                    onClick={handleNext}
+                    className="w-full py-4 bg-white text-black rounded-2xl font-semibold hover:bg-white/90 active:scale-[0.98] transition-all"
+                  >
+                    Book this repair
+                  </button>
+                </div>
+              </motion.div>
+            )}
 
-          {step === 2 && (
-            <div className="bg-[rgb(var(--secondary))] p-6 rounded-lg shadow-md border border-[rgb(var(--tertiary))]/30">
-              <h3 className="font-semibold text-xl mb-4 text-[rgb(var(--advanced))] flex items-center">
-                <motion.span className="mr-2" initial={{ rotate: -10 }} animate={{ rotate: 0 }} transition={{ duration: 0.3 }}>📅</motion.span> Choose Date & Time
-              </h3>
-              <div className="space-y-4">
-                <motion.input
+            {/* Step 1: Schedule */}
+            {step === 1 && (
+              <motion.div
+                key="step1"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                className={`h-full flex flex-col ${shake ? "animate-pulse" : ""}`}
+              >
+                <h3 className="text-lg font-medium mb-4">When?</h3>
+                <input
                   type="date"
-                  name="appointmentDay"
                   value={form.appointmentDay}
-                  onChange={handleChange}
-                  className="input w-full"
+                  onChange={(e) => setForm({ ...form, appointmentDay: e.target.value })}
                   min={new Date().toISOString().split("T")[0]}
-                  animate={controls.appointmentDay}
-                  variants={inputVariants}
-                  onFocus={() => controls.appointmentDay.start("focus")}
-                  onBlur={() => controls.appointmentDay.start("blur")}
+                  className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm mb-4 focus:border-white/30 outline-none"
                 />
-                {errors.appointmentDay && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[rgb(var(--primary))] text-sm">{errors.appointmentDay}</motion.p>}
-                <motion.input
-                  type="time"
-                  name="appointmentTime"
-                  value={form.appointmentTime}
-                  onChange={handleChange}
-                  className="input w-full"
-                  step="1800"
-                  animate={controls.appointmentTime}
-                  variants={inputVariants}
-                  onFocus={() => controls.appointmentTime.start("focus")}
-                  onBlur={() => controls.appointmentTime.start("blur")}
-                />
-                {errors.appointmentTime && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[rgb(var(--primary))] text-sm">{errors.appointmentTime}</motion.p>}
-              </div>
-              <p className="mt-4 text-sm text-gray-600">Available slots update in real-time. Pick what suits you best.</p>
-              <div className="flex gap-4 mt-6">
-                <motion.button
-                  onClick={back}
-                  className="btn-secondary flex-1"
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  Back
-                </motion.button>
-                <motion.button
-                  onClick={next}
-                  disabled={!form.appointmentDay || !form.appointmentTime}
-                  className="btn-primary flex-1"
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  Continue
-                </motion.button>
-              </div>
-            </div>
-          )}
+                <div className="grid grid-cols-4 gap-2 mb-6">
+                  {timeSlots.map(time => (
+                    <button
+                      key={time}
+                      onClick={() => setForm({ ...form, appointmentTime: time })}
+                      className={`py-2.5 rounded-xl text-xs font-medium transition-all ${
+                        form.appointmentTime === time ? "bg-white text-black" : "bg-white/5 text-white/70 hover:bg-white/10"
+                      }`}
+                    >
+                      {time}
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-auto flex gap-3">
+                  <button onClick={handleBack} className="px-6 py-4 text-white/50 hover:text-white text-sm">Back</button>
+                  <button onClick={handleContinue} className="flex-1 py-4 bg-white text-black rounded-2xl font-semibold">Continue</button>
+                </div>
+              </motion.div>
+            )}
 
-          {step === 3 && (
-            <div className="bg-[rgb(var(--secondary))] p-6 rounded-lg shadow-md border border-[rgb(var(--tertiary))]/30">
-              <h3 className="font-semibold text-xl mb-4 text-[rgb(var(--advanced))] flex items-center">
-                <motion.span className="mr-2" initial={{ rotate: -10 }} animate={{ rotate: 0 }} transition={{ duration: 0.3 }}>👤</motion.span> Your Details
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <motion.input
-                    name="customerFirstName"
-                    placeholder="First name"
-                    value={form.customerFirstName}
-                    onChange={handleChange}
-                    className="input"
-                    animate={controls.customerFirstName}
-                    variants={inputVariants}
-                    onFocus={() => controls.customerFirstName.start("focus")}
-                    onBlur={() => controls.customerFirstName.start("blur")}
-                  />
-                  {errors.customerFirstName && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[rgb(var(--primary))] text-sm">{errors.customerFirstName}</motion.p>}
-                </div>
-                <div>
-                  <motion.input
-                    name="customerLastname"
-                    placeholder="Last name"
-                    value={form.customerLastname}
-                    onChange={handleChange}
-                    className="input"
-                    animate={controls.customerLastname}
-                    variants={inputVariants}
-                    onFocus={() => controls.customerLastname.start("focus")}
-                    onBlur={() => controls.customerLastname.start("blur")}
-                  />
-                  {errors.customerLastname && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[rgb(var(--primary))] text-sm">{errors.customerLastname}</motion.p>}
-                </div>
-                <div className="md:col-span-2">
-                  <motion.input
-                    name="customerEmail"
+            {/* Step 2: Details */}
+            {step === 2 && (
+              <motion.div
+                key="step2"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                className={`h-full flex flex-col ${shake ? "animate-pulse" : ""}`}
+              >
+                <h3 className="text-lg font-medium mb-4">Your details</h3>
+                <div className="space-y-3 mb-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <input
+                      placeholder="First"
+                      value={form.customerFirstName}
+                      onChange={(e) => setForm({ ...form, customerFirstName: e.target.value })}
+                      className="bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none placeholder:text-white/30"
+                    />
+                    <input
+                      placeholder="Last"
+                      value={form.customerLastname}
+                      onChange={(e) => setForm({ ...form, customerLastname: e.target.value })}
+                      className="bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none placeholder:text-white/30"
+                    />
+                  </div>
+                  <input
+                    type="email"
                     placeholder="Email"
                     value={form.customerEmail}
-                    onChange={handleChange}
-                    className="input"
-                    type="email"
-                    animate={controls.customerEmail}
-                    variants={inputVariants}
-                    onFocus={() => controls.customerEmail.start("focus")}
-                    onBlur={() => controls.customerEmail.start("blur")}
+                    onChange={(e) => setForm({ ...form, customerEmail: e.target.value })}
+                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none placeholder:text-white/30"
                   />
-                  {errors.customerEmail && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[rgb(var(--primary))] text-sm">{errors.customerEmail}</motion.p>}
-                </div>
-                <div className="md:col-span-2">
-                  <motion.input
-                    name="customerPhoneNumber"
+                  <input
+                    type="tel"
                     placeholder="Phone"
                     value={form.customerPhoneNumber}
-                    onChange={handleChange}
-                    className="input"
-                    type="tel"
-                    animate={controls.customerPhoneNumber}
-                    variants={inputVariants}
-                    onFocus={() => controls.customerPhoneNumber.start("focus")}
-                    onBlur={() => controls.customerPhoneNumber.start("blur")}
+                    onChange={(e) => setForm({ ...form, customerPhoneNumber: e.target.value })}
+                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none placeholder:text-white/30"
                   />
-                  {errors.customerPhoneNumber && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[rgb(var(--primary))] text-sm">{errors.customerPhoneNumber}</motion.p>}
                 </div>
-                <div className="md:col-span-2">
-                  <motion.input
-                    name="customerAddress"
-                    placeholder="Address"
+                <div className="mt-auto flex gap-3">
+                  <button onClick={handleBack} className="px-6 py-4 text-white/50 hover:text-white text-sm">Back</button>
+                  <button onClick={handleContinue} className="flex-1 py-4 bg-white text-black rounded-2xl font-semibold">Continue</button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Step 3: Location (NEW) */}
+            {step === 3 && (
+              <motion.div
+                key="step3"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                className={`h-full flex flex-col ${shake ? "animate-pulse" : ""}`}
+              >
+                <h3 className="text-lg font-medium mb-4">Where?</h3>
+                <div className="space-y-3 mb-4">
+                  <input
+                    placeholder="Street address"
                     value={form.customerAddress}
-                    onChange={handleChange}
-                    className="input"
-                    animate={controls.customerAddress}
-                    variants={inputVariants}
-                    onFocus={() => controls.customerAddress.start("focus")}
-                    onBlur={() => controls.customerAddress.start("blur")}
+                    onChange={(e) => setForm({ ...form, customerAddress: e.target.value })}
+                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none placeholder:text-white/30"
+                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <input
+                      placeholder="City"
+                      value={form.customerCity}
+                      onChange={(e) => setForm({ ...form, customerCity: e.target.value })}
+                      className="bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none placeholder:text-white/30"
+                    />
+                    <input
+                      placeholder="State"
+                      value={form.customerState}
+                      onChange={(e) => setForm({ ...form, customerState: e.target.value })}
+                      className="bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none placeholder:text-white/30"
+                    />
+                  </div>
+                  <textarea
+                    placeholder="Notes (optional)"
+                    value={form.comment}
+                    onChange={(e) => setForm({ ...form, comment: e.target.value })}
+                    rows={2}
+                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none placeholder:text-white/30 resize-none"
                   />
                 </div>
-                <div>
-                  <motion.input
-                    name="customerCity"
-                    placeholder="City"
-                    value={form.customerCity}
-                    onChange={handleChange}
-                    className="input"
-                    animate={controls.customerCity}
-                    variants={inputVariants}
-                    onFocus={() => controls.customerCity.start("focus")}
-                    onBlur={() => controls.customerCity.start("blur")}
-                  />
+                <div className="mt-auto flex gap-3">
+                  <button onClick={handleBack} className="px-6 py-4 text-white/50 hover:text-white text-sm">Back</button>
+                  <button onClick={handleContinue} className="flex-1 py-4 bg-white text-black rounded-2xl font-semibold">Review</button>
                 </div>
-                <div>
-                  <motion.input
-                    name="customerState"
-                    placeholder="State"
-                    value={form.customerState}
-                    onChange={handleChange}
-                    className="input"
-                    animate={controls.customerState}
-                    variants={inputVariants}
-                    onFocus={() => controls.customerState.start("focus")}
-                    onBlur={() => controls.customerState.start("blur")}
-                  />
-                </div>
-              </div>
-              <motion.textarea
-                name="comment"
-                placeholder="Any notes? (e.g., device issues or preferences)"
-                value={form.comment}
-                onChange={handleChange}
-                className="input mt-4 w-full h-24"
-                animate={controls.comment}
-                variants={inputVariants}
-                onFocus={() => controls.comment.start("focus")}
-                onBlur={() => controls.comment.start("blur")}
-              />
-              <p className="mt-4 text-sm text-gray-600">We respect your privacy—details are secure and used only for this booking.</p>
-              <div className="flex gap-4 mt-6">
-                <motion.button
-                  onClick={back}
-                  className="btn-secondary flex-1"
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  Back
-                </motion.button>
-                <motion.button
-                  onClick={next}
-                  disabled={
-                    !form.customerFirstName ||
-                    !form.customerLastname ||
-                    !form.customerEmail ||
-                    !form.customerPhoneNumber ||
-                    (form.customerEmail && !/\S+@\S+\.\S+/.test(form.customerEmail)) ||
-                    (form.customerPhoneNumber && !/^\d{7,15}$/.test(form.customerPhoneNumber))
-                  }
-                  className="btn-primary flex-1"
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  Review
-                </motion.button>
-              </div>
-            </div>
-          )}
+              </motion.div>
+            )}
 
-          {step === 4 && (
-            <div className="bg-[rgb(var(--secondary))] p-6 rounded-lg shadow-md border border-[rgb(var(--tertiary))]/30">
-              <h3 className="font-semibold text-xl mb-4 text-[rgb(var(--advanced))] flex items-center">
-                <motion.span className="mr-2" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.3, type: "spring" }}>✅</motion.span> Confirm Your Booking
-              </h3>
-              <div className="space-y-3 text-[rgb(var(--advanced))]">
-                <p className="font-medium">{form.customerFirstName} {form.customerLastname}</p>
-                <p>{form.customerEmail} · {form.customerPhoneNumber}</p>
-                <p>{form.customerAddress}, {form.customerCity}, {form.customerState}</p>
-                <p className="text-lg font-bold">{form.appointmentDay} at {form.appointmentTime}</p>
-                <p className="text-sm italic">Repair: {state.partName} (${state.cost})</p>
-                {form.comment && <p className="text-sm">Note: {form.comment}</p>}
-              </div>
-              <p className="mt-4 text-sm text-gray-600">Everything look good? Let's lock it in!</p>
-              <div className="flex gap-4 mt-6">
-                <motion.button
-                  onClick={back}
-                  className="btn-secondary flex-1"
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  Edit
-                </motion.button>
-                <motion.button
-                  onClick={submitAppointment}
-                  disabled={isSubmitting || contextLoading}
-                  className="btn-primary flex-1 flex items-center justify-center"
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  {isSubmitting ? (
-                    <motion.span
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    >
-                      ⏳
-                    </motion.span>
-                  ) : (
-                    "Confirm"
-                  )}{" "}
-                  <motion.span className="ml-2" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2 }}>🎉</motion.span>
-                </motion.button>
-              </div>
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
-
-      {isSubmitting && (
-        <motion.div
-          className="fixed inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center z-50"
-          variants={loadingOverlayVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.div
-            className="text-white text-6xl mb-4"
-            variants={spinnerVariants}
-            animate="spin"
-          >
-            🔧
-          </motion.div>
-          <motion.p
-            className="text-white text-xl font-semibold"
-            variants={pulseVariants}
-            animate="pulse"
-          >
-            Securing your slot... Hang tight!
-          </motion.p>
-        </motion.div>
-      )}
-    </section>
+            {/* Step 4: Confirm */}
+            {step === 4 && (
+              <motion.div
+                key="step4"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="h-full flex flex-col"
+              >
+                <h3 className="text-lg font-medium mb-4">Confirm</h3>
+                <div className="space-y-2 text-sm flex-1 overflow-y-auto">
+                  <div className="flex justify-between py-1.5 border-b border-white/10">
+                    <span className="text-white/50">Service</span>
+                    <span className="truncate max-w-[60%]">{state?.partName}</span>
+                  </div>
+                  <div className="flex justify-between py-1.5 border-b border-white/10">
+                    <span className="text-white/50">When</span>
+                    <span>{form.appointmentDay} {form.appointmentTime}</span>
+                  </div>
+                  <div className="flex justify-between py-1.5 border-b border-white/10">
+                    <span className="text-white/50">Who</span>
+                    <span>{form.customerFirstName} {form.customerLastname}</span>
+                  </div>
+                  <div className="flex justify-between py-1.5 border-b border-white/10">
+                    <span className="text-white/50">Where</span>
+                    <span className="truncate max-w-[60%]">{form.customerCity}</span>
+                  </div>
+                  <div className="flex justify-between items-baseline pt-2">
+                    <span className="text-white/50">Total</span>
+                    <span className="text-2xl font-bold">${state?.cost}</span>
+                  </div>
+                </div>
+                <div className="mt-auto flex gap-3 pt-4">
+                  <button onClick={handleBack} className="px-6 py-4 text-white/50 hover:text-white text-sm">Edit</button>
+                  <button
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    className="flex-1 py-4 bg-emerald-500 text-white rounded-2xl font-semibold disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      "Confirm booking"
+                    )}
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
   );
 };
 

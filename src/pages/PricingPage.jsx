@@ -86,7 +86,7 @@ export default function PricingPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-12 space-y-12">
+    <div id="prices" className="mx-auto max-w-7xl px-6 py-12 space-y-12">
       {brands.map((brand) => {
         const prices = brandPrices[brand.id] || [];
 

@@ -75,7 +75,7 @@ const Stars = ({ rating }) => (
 
 const Testimonials = () => {
   return (
-    <section className="py-24 bg-gradient-to-br from-primary via-red-800 to-black text-white">
+    <section className="py-24 bg-gradient-to-br from-secondary via-primary to-black text-white">
 
       {/* 🔹 Component-scoped CSS */}
       <style>{`
@@ -155,7 +155,7 @@ const Testimonials = () => {
         >
           {reviews.map((review) => (
             <SwiperSlide key={review.id}>
-              <div className="h-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-lg transition-all duration-500">
+              <div className="h-full bg-primary backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-lg transition-all duration-500">
                 <Stars rating={review.rating} />
 
                 <p className="mt-4 text-gray-200 italic">
@@ -164,7 +164,7 @@ const Testimonials = () => {
 
                 <div className="mt-6 flex items-center justify-between">
                   <span className="font-semibold">{review.name}</span>
-                  <span className="text-sm text-gray-400">{review.date}</span>
+                  <span className="text-sm text-secondary">{review.date}</span>
                 </div>
               </div>
             </SwiperSlide>
