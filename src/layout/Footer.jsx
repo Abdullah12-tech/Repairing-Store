@@ -75,7 +75,7 @@ const Footer = () => {
               </Link>
             </li>
             <li>
-              <Link to="/prices#prices" className="hover:text-[var(--tertiary)] transition-colors">
+              <Link to="/prices" className="hover:text-[var(--tertiary)] transition-colors">
                 Prices
               </Link>
             </li>
@@ -87,16 +87,6 @@ const Footer = () => {
             <li>
               <Link to="/business" className="hover:text-[var(--tertiary)] transition-colors">
                 Business
-              </Link>
-            </li>
-            <li>
-              <Link to="/mail-in-repair" className="hover:text-[var(--tertiary)] transition-colors">
-                Mail-in repair
-              </Link>
-            </li>
-            <li>
-              <Link to="/sell-device" className="hover:text-[var(--tertiary)] transition-colors">
-                Sell your device
               </Link>
             </li>
           </ul>
@@ -126,7 +116,7 @@ const Footer = () => {
           <div className="text-sm space-y-2">
             <p className="font-medium">Techniek Nederland</p>
             <p>
-              Powered by <span className="text-[var(--primary)] font-semibold">Leapforce</span>
+              Powered by <span className="text-[var(--primary)] font-semibold">RoyalTech</span>
             </p>
           </div>
         </div>

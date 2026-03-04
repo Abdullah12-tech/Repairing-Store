@@ -2,7 +2,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { DiVisualstudio } from "react-icons/di";
 import { Link } from "react-router-dom";
-import HeaderLogo from "../../public/logo.png"
+import HeaderLogo from "/public/logo.png"
 
 const Header = () => {
   const [open, setOpen] = useState(false);
