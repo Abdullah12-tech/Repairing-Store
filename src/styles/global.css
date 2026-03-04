@@ -3,7 +3,7 @@
   --primary: 0, 0, 128; /* glossy bright red */
   --secondary: 255 255 255;  /* white */
   --advanced: 17 24 39;  /* near-black (slate-900) */
-  --tertiary: 255 205 2; /* yellow-400 */
+  --tertiary: 202, 162, 40; /* yellow-400 */
 }
 
 
