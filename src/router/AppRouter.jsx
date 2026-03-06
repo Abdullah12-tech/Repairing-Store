@@ -11,9 +11,11 @@ import SelectModel from '../pages/ModelPage'
 import SelectParts from '../pages/PartsPage'
 import PricingPage from '../pages/PricingPage'
 import AboutRepairStore from '../pages/AboutPage'
+
 import AppointmentSuccess from '../pages/AppointmentConfirm'
 import AppointmentPage from '../pages/AppointmentBook'
 import ScrollToTop from '../utils/scrollToTop'
+import { FiMessageCircle } from 'react-icons/fi'
 
 const Shell = () => (
   <div style={{ minHeight: '100vh', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
@@ -23,9 +25,18 @@ const Shell = () => (
     </main>
     <Testimonials />
     <ContactUs />
-    <button className="fixed z-50 max-w-[100px] text-center p-4 bottom-6 right-6 bg-yellow-400 text-black font-semibold rounded-full shadow-lg hover:scale-105 transition"
-            >CONTACT
-            </button>
+    
+
+<button
+  className="fixed z-50 bottom-5 right-5 sm:bottom-6 sm:right-6
+  w-12 h-12 sm:w-14 sm:h-14
+  flex items-center justify-center
+  bg-yellow-400 text-black
+  rounded-full shadow-lg
+  hover:scale-105 active:scale-95 transition"
+>
+  <FiMessageCircle size={22} />
+</button>
     <Footer />
   </div>
 )

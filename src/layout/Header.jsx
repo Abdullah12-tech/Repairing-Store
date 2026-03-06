@@ -14,18 +14,22 @@ const Header = () => {
         <div className="h-4 bg-primary" />
 
         <header className="bg-secondary border-b">
-          <div className="max-w-[1450px] mx-auto px-6 md:px-16 h-20 flex items-center justify-between">
+          <div className="max-w-[1450px] mx-auto px-4 md:px-16 h-16 md:h-20 flex items-center justify-between">
 
             {/* Logo */}
-            <div className="text-2xl font-black tracking-tight text-primary">
-              <Link to="/"><img src={HeaderLogo}/></Link>
-            </div>
+            <Link to="/" className="flex items-center">
+              <img
+                src={HeaderLogo}
+                alt="logo"
+                className="h-8 md:h-10 w-auto object-contain"
+              />
+            </Link>
 
             {/* Desktop Nav */}
             <nav className="hidden lg:flex gap-10 text-advanced font-medium">
               {["Repairs", "About Us", "Prices", "Support", "Business"].map((item) => (
                 <Link
-                  to={`/${item.toLocaleLowerCase().replace(/\s+/g, "")}`}
+                  to={`/${item.toLowerCase().replace(/\s+/g, "")}`}
                   key={item}
                   className="relative cursor-pointer group"
                 >
@@ -36,27 +40,27 @@ const Header = () => {
             </nav>
 
             {/* CTA + Hamburger */}
-            <div className="flex items-center gap-4">
-              <Link to={"/repairs"}
-                className="hidden sm:inline-flex px-5 py-2  bg-primary text-secondary transition-all"
+            <div className="flex items-center gap-3">
+
+              <Link
+                to="/repairs"
+                className="hidden sm:inline-flex px-4 py-2 text-sm bg-primary text-secondary font-medium"
               >
                 Book Appointment
               </Link>
 
               {/* Hamburger */}
-              <div
-                role="button"
-                tabIndex={0}
+              <button
                 onClick={() => setOpen(!open)}
-                onKeyDown={(e) => e.key === "Enter" && setOpen(!open)}
-                className="lg:hidden w-10 h-10 border-none active:border-none bg-secondary flex items-center justify-center"
+                className="lg:hidden w-9 h-9 flex items-center justify-center"
               >
                 {open ? (
-                  <X size={40} className="text-advanced transition" />
+                  <X size={26} className="text-advanced" />
                 ) : (
-                  <Menu size={40} className="text-advanced transition" />
+                  <Menu size={26} className="text-advanced" />
                 )}
-              </div>
+              </button>
+
             </div>
           </div>
         </header>
@@ -64,24 +68,43 @@ const Header = () => {
 
       {/* Mobile Radial Menu */}
       <div
-        className={`fixed inset-0 z-40 bg-secondary text-primary transition-all duration-500 ease-in-out
-        ${open ? "clip-open" : "clip-closed"}`}
+        className={`fixed inset-0 z-40 flex items-center justify-center transition-all duration-500 ease-in-out
+  ${open ? "clip-open" : "clip-closed"}`}
       >
-        <nav className="h-full flex flex-col items-center justify-center gap-10 text-3xl font-semibold">
-          {["Repairs", "Stores", "Prices", "Support", "Business"].map((item) => (
+        {/* Background */}
+        <div className="absolute inset-0 bg-secondary" />
+
+        {/* Menu Panel */}
+        <nav className="relative w-[90%] max-w-sm bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 flex flex-col gap-6 text-center shadow-2xl">
+
+          {[
+            { title: "Repairs", desc: "Fix phones & devices" },
+            { title: "Stores", desc: "Find our locations" },
+            { title: "Prices", desc: "Check service costs" },
+            { title: "Support", desc: "Help & assistance" },
+            { title: "Business", desc: "Enterprise services" },
+          ].map((item) => (
             <Link
-              key={item}
-              to={`/${item.toLocaleLowerCase()}`}
+              key={item.title}
+              to={`/${item.title.toLowerCase()}`}
               onClick={() => setOpen(false)}
-              className="hover:text-tertiary transition cursor-pointer"
+              className="group py-3 border-b border-white/10 last:border-none"
             >
-              {item}
+              <p className="text-xl font-semibold text-primary group-hover:text-tertiary transition">
+                {item.title}
+              </p>
+
+              <span className="text-sm text-advanced opacity-70">
+                {item.desc}
+              </span>
             </Link>
           ))}
 
+          {/* CTA */}
           <Link
+            to="/repairs"
             onClick={() => setOpen(false)}
-            className="mt-8 px-8 py-4 bg-tertiary text-black font-bold"
+            className="mt-6 w-full py-4 rounded-xl bg-primary text-secondary text-lg font-bold hover:scale-[1.02] transition"
           >
             Book Appointment
           </Link>
