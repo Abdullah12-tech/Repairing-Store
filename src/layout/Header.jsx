@@ -52,7 +52,7 @@ const Header = () => {
               {/* Hamburger */}
               <button
                 onClick={() => setOpen(!open)}
-                className="lg:hidden w-9 h-9 flex items-center justify-center"
+                className="lg:hidden bg-secondary  flex items-center justify-center"
               >
                 {open ? (
                   <X size={26} className="text-advanced" />
@@ -79,7 +79,6 @@ const Header = () => {
 
           {[
             { title: "Repairs", desc: "Fix phones & devices" },
-            { title: "Stores", desc: "Find our locations" },
             { title: "Prices", desc: "Check service costs" },
             { title: "Support", desc: "Help & assistance" },
             { title: "Business", desc: "Enterprise services" },

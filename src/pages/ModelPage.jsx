@@ -121,49 +121,49 @@ const RepairsPage = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-10 max-w-xl">
-        <div className="flex-1">
-          <CustomSelect
-            label="Brand"
-            placeholder="All brands"
-            value={selectedBrand}
-            onChange={handleBrandChange}
-            options={[
-              { value: "", label: "All brands" },
-              ...brands.map(b => ({
-                value: (b.id || b.Id)?.toString(),
-                label: b.name || b.Name,
-              })),
-            ]}
-            disabled={loading}
-          />
-        </div>
+  <div className="flex-1">
+    <CustomSelect
+      label="Brand"
+      placeholder="All brands"
+      value={selectedBrand}
+      onChange={handleBrandChange}
+      options={[
+        { value: "", label: "All brands" },
+        ...brands.map(b => ({
+          value: (b.id || b.Id)?.toString(),
+          label: b.name || b.Name,
+        })),
+      ]}
+      disabled={loading}
+    />
+  </div>
 
-        <div className="flex-1">
-          <CustomSelect
-            label="Model"
-            placeholder="All models"
-            value={selectedModel}
-            onChange={(value) => {
-              setSelectedModel(value);
-              setPage(1);
-            }}
-            options={[
-              { value: "", label: "All models" },
-              ...models
-                .filter(m => {
-                  if (!selectedBrand) return true;
-                  const modelBrandId = (m.brandId || m.BrandId)?.toString();
-                  return modelBrandId === selectedBrand;
-                })
-                .map(m => ({
-                  value: (m.id || m.Id)?.toString(),
-                  label: m.name || m.Name,
-                })),
-            ]}
-            disabled={loading}
-          />
-        </div>
-      </div>
+  <div className="flex-1">
+    <CustomSelect
+      label="Model"
+      placeholder="All models"
+      value={selectedModel}
+      onChange={value => {
+        setSelectedModel(value)
+        setPage(1)
+      }}
+      options={[
+        { value: "", label: "All models" },
+        ...models
+          .filter(m => {
+            if (!selectedBrand) return true
+            const modelBrandId = (m.brandId || m.BrandId)?.toString()
+            return modelBrandId === selectedBrand
+          })
+          .map(m => ({
+            value: (m.id || m.Id)?.toString(),
+            label: m.name || m.Name,
+          })),
+      ]}
+      disabled={loading}
+    />
+  </div>
+</div>
 
       {loading ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
