@@ -7,7 +7,7 @@ const HeroSection = () => {
         {/* Heading */}
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-secondary leading-[1.2]">
           Fast & Reliable{" "}
-          <span className="text-advanced">Phone Repairs</span>
+          <span className="text-tertiary">Phone Repairs</span>
         </h1>
 
         {/* Description */}

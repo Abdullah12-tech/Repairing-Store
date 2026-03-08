@@ -27,6 +27,7 @@ const SelectParts = () => {
         console.log(pricesRes?.data);
         setParts(partsRes?.data || []);
         setPrices(pricesRes?.data || []);
+        console.log("Fetched parts:", partsRes?.data);
         
         
       } catch (err) {
@@ -56,7 +57,7 @@ const SelectParts = () => {
         phoneModelId: modelId,
         phonePartId: part.id,
         repairPriceId: price.id,
-        partName: part.name,
+        name: part.name,
         cost: price.cost,
         dUration: price.dUration,
       },
@@ -122,13 +123,13 @@ const SelectParts = () => {
                 className="h-24 mx-auto object-contain"
               />
 
-              <p className="text-center mt-3 font-medium">
+              <p className="text-center text-advanced mt-3 font-medium">
                 {part.name}
               </p>
 
               {price ? (
                 <p className="text-center text-sm text-tertiary mt-1">
-                  ${price.cost} · {price.duration} mins
+                  ${price.cost} · {price.dUration}
                 </p>
               ) : (
                 <p className="text-center text-sm text-tertiary mt-1">

@@ -24,7 +24,7 @@ const CustomSelect = ({
   const selectedOption = options.find(o => o.value === value)
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative z-30" ref={ref}>
       {label && (
         <label className="block text-sm font-medium mb-1">
           {label}

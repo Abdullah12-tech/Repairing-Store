@@ -205,8 +205,8 @@ const AppointmentPage = () => {
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-4 text-xl">
                   🔧
                 </div>
-                <h2 className="text-2xl font-semibold mb-1">{state?.partName}</h2>
-                <p className="text-white/50 text-sm mb-6">{state?.duration} min • Same-day</p>
+                <h2 className="text-2xl font-semibold mb-1">{state?.name}</h2>
+                <p className="text-white/50 text-sm mb-6">{state?.dUration} • Same-day</p>
                 <div className="bg-black/20 rounded-2xl p-4 mb-6">
                   <div className="flex justify-between items-baseline">
                     <span className="text-white/60 text-sm">Total</span>
@@ -372,7 +372,7 @@ const AppointmentPage = () => {
                 <div className="space-y-2 text-sm flex-1 overflow-y-auto">
                   <div className="flex justify-between py-1.5 border-b border-white/10">
                     <span className="text-white/50">Service</span>
-                    <span className="truncate max-w-[60%]">{state?.partName}</span>
+                    <span className="truncate max-w-[60%]">{state?.name}</span>
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-white/10">
                     <span className="text-white/50">When</span>
