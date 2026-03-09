@@ -7,16 +7,14 @@ import {
   FaTiktok,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
+import FooterLogo from "../assets/images/logo.png";
 const Footer = () => {
   return (
     <footer className="bg-[var(--secondary)] text-[var(--advanced)] px-6 md:px-16 py-14">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
         {/* Left Column */}
         <div className="space-y-4 text-sm">
-          <p className="font-semibold text-[var(--primary)]">
-            ThePhoneLab® Protected by de Marktplaats
-          </p>
+          <img className="w-20 h-15" src={FooterLogo} alt="logo" />
           <ul className="space-y-2">
             <li>
               <Link to="/terms" className="hover:text-[var(--tertiary)] transition-colors">

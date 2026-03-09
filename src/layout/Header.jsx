@@ -2,7 +2,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { DiVisualstudio } from "react-icons/di";
 import { Link } from "react-router-dom";
-import HeaderLogo from "/public/logo.png"
+import HeaderLogo from "../assets/images/logo.png";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -21,7 +21,7 @@ const Header = () => {
               <img
                 src={HeaderLogo}
                 alt="logo"
-                className="h-8 md:h-10 w-auto object-contain"
+                className="h-8 md:h-10 w-10 md:w-20 "
               />
             </Link>
 
