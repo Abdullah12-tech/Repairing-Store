@@ -16,6 +16,7 @@ import AppointmentSuccess from '../pages/AppointmentConfirm'
 import AppointmentPage from '../pages/AppointmentBook'
 import ScrollToTop from '../utils/scrollToTop'
 import { FiMessageCircle } from 'react-icons/fi'
+import ContactPage from '../pages/ContactUs'
 
 const Shell = () => (
   <div style={{ minHeight: '100vh', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
@@ -49,7 +50,7 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <ScrollToTop/>
-      
+
       <RepairsProvider>
         <Routes>
           <Route element={<ShellWrapper />}>
@@ -61,6 +62,7 @@ export default function AppRouter() {
             <Route path="/aboutus" element={<AboutRepairStore />} />
             <Route path="/appointment" element={<AppointmentPage />} />
             <Route path="/appointment-success" element={<AppointmentSuccess />} />
+            <Route path="/contact" element={<ContactPage />} />
           </Route>
         </Routes>
       </RepairsProvider>

@@ -20,14 +20,14 @@ const HeroSection = () => {
         <div className="mt-8 sm:mt-10 w-full flex flex-col sm:flex-row gap-3 sm:gap-4 sm:max-w-md">
 
           <a
-            href="#"
+            href="/repairs"
             className="w-full sm:w-1/2 px-6 py-3 sm:py-3.5 bg-secondary text-advanced text-base sm:text-lg font-semibold rounded-md shadow-sm hover:shadow-lg transition"
           >
             Plan Your Repair
           </a>
 
           <a
-            href="#"
+            href="/contact"
             className="w-full sm:w-1/2 px-6 py-3 sm:py-3.5 bg-tertiary text-advanced text-base sm:text-lg font-semibold rounded-md shadow-sm hover:shadow-lg transition"
           >
             Visit a Store
