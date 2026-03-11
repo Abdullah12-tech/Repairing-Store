@@ -30,11 +30,6 @@ const ContactUs = () => {
           <button className="bg-tertiary hover:bg-tertiary transition px-6 py-3 font-semibold rounded shadow">
             GET IN TOUCH
           </button>
-
-          <div className="mt-6">
-            <p className="text-lg font-bold">16 stores</p>
-            <p className="text-gray-600">Pass by</p>
-          </div>
         </div>
 
       </div>

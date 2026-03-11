@@ -14,7 +14,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
         {/* Left Column */}
         <div className="space-y-4 text-sm">
-          <img className="w-20 h-15" src={FooterLogo} alt="logo" />
+          <img className="w-auto h-10" src={FooterLogo} alt="logo" />
           <ul className="space-y-2">
             <li>
               <Link to="/terms" className="hover:text-[var(--tertiary)] transition-colors">
@@ -37,22 +37,12 @@ const Footer = () => {
               </Link>
             </li>
             <li>
-              <Link to="/team" className="hover:text-[var(--tertiary)] transition-colors">
+              <Link to="/aboutus#team" className="hover:text-[var(--tertiary)] transition-colors">
                 The team
               </Link>
             </li>
             <li>
-              <Link to="/jobs" className="hover:text-[var(--tertiary)] transition-colors">
-                Jobs
-              </Link>
-            </li>
-            <li>
-              <Link to="/promises" className="hover:text-[var(--tertiary)] transition-colors">
-                Our promises
-              </Link>
-            </li>
-            <li>
-              <Link to="/about" className="hover:text-[var(--tertiary)] transition-colors">
+              <Link to="/aboutus" className="hover:text-[var(--tertiary)] transition-colors">
                 About us
               </Link>
             </li>
@@ -112,7 +102,7 @@ const Footer = () => {
             </div>
           </div>
           <div className="text-sm space-y-2">
-            <p className="font-medium">Techniek Nederland</p>
+            {/* <p className="font-medium">Techniek Nederland</p> */}
             <p>
               Powered by <span className="text-[var(--primary)] font-semibold">RoyalTech</span>
             </p>

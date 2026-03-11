@@ -73,7 +73,7 @@ const AboutRepairStore = () => {
       </div>
 
       {/* ================= TEAM ================= */}
-      <div className="bg-[rgb(var(--advanced))]/5 py-28">
+      <div id="team" className="bg-[rgb(var(--advanced))]/5 py-28">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">The people behind the repairs</h2>

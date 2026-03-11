@@ -118,13 +118,13 @@ const Testimonials = () => {
         .testimonial-swiper .swiper-pagination-bullet {
           width: 8px;
           height: 8px;
-          background: #fca5a5;
+          background: white;
           opacity: 1;
           transition: all 0.3s ease;
         }
 
         .testimonial-swiper .swiper-pagination-bullet-active {
-          background: linear-gradient(135deg, #f43f5e, #fb7185);
+          background: linear-gradient(135deg, #000080, #3b82f6);
           transform: scale(1.3);
         }
       `}</style>

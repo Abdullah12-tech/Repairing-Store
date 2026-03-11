@@ -1,6 +1,6 @@
 const HeroSection = () => {
   return (
-    <section className="relative max-w-[1150px] mx-auto px-5 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24 min-h-[70vh] flex items-center justify-center bg-primary">
+    <section className="relative max-w-full mx-auto px-5 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24 min-h-[50vh] flex items-center justify-center bg-primary">
 
       <div className="relative z-10 max-w-3xl text-center flex flex-col items-center">
 

@@ -21,13 +21,13 @@ const Header = () => {
               <img
                 src={HeaderLogo}
                 alt="logo"
-                className="h-8 md:h-10 w-10 md:w-20 "
+                className="h-10 w-auto"
               />
             </Link>
 
             {/* Desktop Nav */}
             <nav className="hidden lg:flex gap-10 text-advanced font-medium">
-              {["Repairs", "About Us", "Prices", "Support", "Business"].map((item) => (
+              {["Repairs", "About Us", "Prices", "Contact"].map((item) => (
                 <Link
                   to={`/${item.toLowerCase().replace(/\s+/g, "")}`}
                   key={item}
@@ -44,7 +44,7 @@ const Header = () => {
 
               <Link
                 to="/repairs"
-                className="hidden sm:inline-flex px-4 py-2 text-sm bg-primary text-secondary font-medium"
+                className="hidden sm:inline-flex px-4 py-4 rounded-md text-sm bg-primary text-secondary font-medium"
               >
                 Book Appointment
               </Link>
@@ -80,8 +80,7 @@ const Header = () => {
           {[
             { title: "Repairs", desc: "Fix phones & devices" },
             { title: "Prices", desc: "Check service costs" },
-            { title: "Support", desc: "Help & assistance" },
-            { title: "Business", desc: "Enterprise services" },
+            { title: "Contact Us", desc: "Reach Out to Us." },
           ].map((item) => (
             <Link
               key={item.title}

@@ -1,9 +1,9 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useLocation, useNavigate } from "react-router-dom";
 import { useRepair } from "../context/PhonesContext";
 import CustomSelect from "../components/ui/customSelect";
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 10;
 
 const RepairsPage = () => {
   const { getBrands, getPhoneModels } = useRepair();
@@ -16,59 +16,74 @@ const RepairsPage = () => {
 
   const [brands, setBrands] = useState([]);
   const [models, setModels] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-
-  // Don't initialize from URL immediately - wait for data to load
+  const [brandsLoading, setBrandsLoading] = useState(true);
+  const [modelsLoading, setModelsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
 
-  // Fetch data on mount
+  // Load brands once
   useEffect(() => {
     let mounted = true;
-    setLoading(true);
+    setBrandsLoading(true);
 
-    Promise.all([getBrands(), getPhoneModels()])
-      .then(([brandsRes, modelsRes]) => {
+    getBrands()
+      .then((brandsRes) => {
         if (!mounted) return;
-        
         const brandsData = brandsRes?.data || brandsRes || [];
-        const modelsData = modelsRes?.data || modelsRes || [];
-        
         setBrands(brandsData);
-        setModels(modelsData);
         
-        // NOW set the selected brand after data is loaded
         if (brandFromUrl) {
           setSelectedBrand(brandFromUrl);
         }
       })
-      .catch(err => {
-        console.error("Failed to fetch data:", err);
-      })
+      .catch(err => console.error("Failed to fetch brands:", err))
       .finally(() => {
-        if (mounted) setLoading(false);
+        if (mounted) setBrandsLoading(false);
       });
 
-    return () => {
-      mounted = false;
-    };
-  }, [getBrands, getPhoneModels]); // Remove brandFromUrl from here
+    return () => { mounted = false; };
+  }, []);
 
-  // Handle URL changes after initial load
-  useEffect(() => {
-    if (!loading && brandFromUrl !== selectedBrand) {
-      setSelectedBrand(brandFromUrl || "");
-      setSelectedModel("");
-      setPage(1);
+  // Load models with pagination
+  const loadModels = useCallback(async (brandId, pageNum = 1) => {
+    setModelsLoading(true);
+    try {
+      const params = { page: pageNum, limit: ITEMS_PER_PAGE };
+      if (brandId) params.brandId = brandId;
+      
+      const response = await getPhoneModels(params);
+      const modelsData = response?.data || response || [];
+      const total = response?.total || response?.totalCount || modelsData.length;
+      
+      setModels(modelsData);
+      setTotalPages(Math.max(1, Math.ceil(total / ITEMS_PER_PAGE)));
+      setCurrentPage(pageNum);
+    } catch (err) {
+      console.error("Failed to fetch models:", err);
+      setModels([]);
+      setTotalPages(1);
+    } finally {
+      setModelsLoading(false);
     }
-  }, [brandFromUrl, loading]); // Add selectedBrand to deps if needed
+  }, [getPhoneModels]);
+
+  // Load models when brand changes
+  useEffect(() => {
+    loadModels(selectedBrand || null, 1);
+    setSelectedModel("");
+  }, [selectedBrand, loadModels]);
+
+  // Handle URL changes
+  useEffect(() => {
+    if (!brandsLoading && brandFromUrl !== selectedBrand) {
+      setSelectedBrand(brandFromUrl || "");
+    }
+  }, [brandFromUrl, brandsLoading]);
 
   const handleBrandChange = (value) => {
     setSelectedBrand(value);
-    setSelectedModel("");
-    setPage(1);
-    
     if (value) {
       setSearchParams({ brand: value });
     } else {
@@ -76,30 +91,46 @@ const RepairsPage = () => {
     }
   };
 
-  const filteredModels = useMemo(() => {
-    if (!selectedBrand) return models;
+  const handlePageChange = (pageNum) => {
+    if (pageNum === currentPage) return;
+    loadModels(selectedBrand || null, pageNum);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Generate clean page numbers
+  const getVisiblePages = () => {
+    const delta = 1; // Pages to show around current
+    const range = [];
+    const rangeWithDots = [];
+    let l;
+
+    range.push(1);
     
-    return models.filter(model => {
-      const modelBrandId = (model.brandId || model.BrandId)?.toString();
-      return modelBrandId === selectedBrand;
-    });
-  }, [models, selectedBrand]);
+    for (let i = currentPage - delta; i <= currentPage + delta; i++) {
+      if (i < totalPages && i > 1) {
+        range.push(i);
+      }
+    }
+    
+    if (totalPages > 1) range.push(totalPages);
 
-  const totalPages = Math.ceil(filteredModels.length / ITEMS_PER_PAGE);
+    for (let i of range) {
+      if (l) {
+        if (i - l === 2) {
+          rangeWithDots.push(l + 1);
+        } else if (i - l !== 1) {
+          rangeWithDots.push('...');
+        }
+      }
+      rangeWithDots.push(i);
+      l = i;
+    }
 
-  const paginatedModels = useMemo(() => {
-    const start = (page - 1) * ITEMS_PER_PAGE;
-    return filteredModels.slice(start, start + ITEMS_PER_PAGE);
-  }, [filteredModels, page]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [selectedBrand, selectedModel]);
+    return rangeWithDots;
+  };
 
   const getBrandName = (brandId) => {
-    const brand = brands.find(b => 
-      (b.id || b.Id)?.toString() === brandId
-    );
+    const brand = brands.find(b => (b.id || b.Id)?.toString() === brandId);
     return brand?.name || brand?.Name || brandNameFromState || "Unknown Brand";
   };
 
@@ -107,74 +138,78 @@ const RepairsPage = () => {
     navigate(`/repairs/${modelId}`);
   };
 
+  const isLoading = brandsLoading || modelsLoading;
+
   return (
-    <section className="max-w-7xl mx-auto px-6 py-12">
+    <section className="max-w-6xl mx-auto px-10 py-12">
       <div className="mb-8">
         <h2 className="text-2xl font-bold">
-          {selectedBrand ? `${getBrandName(selectedBrand)} Repairs` : "Select your device"}
+          {selectedBrand ? `${getBrandName(selectedBrand)} Repairs` : "All Repairs"}
         </h2>
-        {selectedBrand && (
+        {!isLoading && (
           <p className="text-gray-500 mt-1 text-sm">
-            Showing {filteredModels.length} models for {getBrandName(selectedBrand)}
+            {models.length} models {selectedBrand && `for ${getBrandName(selectedBrand)}`}
           </p>
         )}
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-10 max-w-xl">
-  <div className="flex-1">
-    <CustomSelect
-      label="Brand"
-      placeholder="All brands"
-      value={selectedBrand}
-      onChange={handleBrandChange}
-      options={[
-        { value: "", label: "All brands" },
-        ...brands.map(b => ({
-          value: (b.id || b.Id)?.toString(),
-          label: b.name || b.Name,
-        })),
-      ]}
-      disabled={loading}
-    />
-  </div>
+        {/* Brand Select */}
+        <div className="flex-1">
+          <CustomSelect
+            label="Brand"
+            placeholder={brandsLoading ? "Loading..." : "All brands"}
+            value={selectedBrand}
+            onChange={handleBrandChange}
+            options={[
+              { value: "", label: "All brands" },
+              ...brands.map(b => ({
+                value: (b.id || b.Id)?.toString(),
+                label: b.name || b.Name,
+              })),
+            ]}
+            disabled={brandsLoading}
+          />
+        </div>
 
-  <div className="flex-1">
-    <CustomSelect
-      label="Model"
-      placeholder="All models"
-      value={selectedModel}
-      onChange={value => {
-        setSelectedModel(value)
-        setPage(1)
-      }}
-      options={[
-        { value: "", label: "All models" },
-        ...models
-          .filter(m => {
-            if (!selectedBrand) return true
-            const modelBrandId = (m.brandId || m.BrandId)?.toString()
-            return modelBrandId === selectedBrand
-          })
-          .map(m => ({
-            value: (m.id || m.Id)?.toString(),
-            label: m.name || m.Name,
-          })),
-      ]}
-      disabled={loading}
-    />
-  </div>
-</div>
+        {/* Model Select - Disabled state with white styling */}
+        <div className="flex-1 relative">
+          {!selectedBrand && (
+            <div className="absolute inset-0 bg-white/80 z-10 rounded-lg cursor-not-allowed" />
+          )}
+          <CustomSelect
+            label="Model"
+            placeholder={modelsLoading ? "Loading..." : "Select model"}
+            value={selectedModel}
+            onChange={setSelectedModel}
+            options={[
+              { value: "", label: "All models" },
+              ...models.map(m => ({
+                value: (m.id || m.Id)?.toString(),
+                label: m.name || m.Name,
+              })),
+            ]}
+            disabled={!selectedBrand || modelsLoading}
+            className={!selectedBrand ? "bg-gray-50 text-gray-400" : "bg-white"}
+          />
+          {!selectedBrand && (
+            <p className="absolute -bottom-6 left-0 text-xs text-gray-400">
+              Select a brand first
+            </p>
+          )}
+        </div>
+      </div>
 
-      {loading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+      {isLoading ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
           {Array.from({ length: ITEMS_PER_PAGE }).map((_, i) => (
             <ModelSkeleton key={i} />
           ))}
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {paginatedModels.map(model => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-8">
+            {models.map(model => (
               <div
                 key={model.id || model.Id}
                 onClick={() => handleModelClick(model.id || model.Id)}
@@ -185,9 +220,7 @@ const RepairsPage = () => {
                     src={model.imageUrl || model.ImageUrl || "/placeholder-phone.png"}
                     alt={model.name || model.Name}
                     className="h-32 mx-auto object-contain group-hover:scale-105 transition-transform duration-300"
-                    onError={(e) => {
-                      e.target.src = "/placeholder-phone.png";
-                    }}
+                    onError={(e) => { e.target.src = "/placeholder-phone.png"; }}
                   />
                 </div>
                 <p className="text-center mt-3 text-sm font-medium text-gray-800 line-clamp-2">
@@ -197,9 +230,9 @@ const RepairsPage = () => {
             ))}
           </div>
 
-          {!paginatedModels.length && (
+          {!models.length && (
             <div className="text-center py-16">
-              <p className="text-gray-500 mb-2">No models found for this selection</p>
+              <p className="text-gray-500 mb-2">No models found</p>
               {selectedBrand && (
                 <button
                   onClick={() => handleBrandChange("")}
@@ -211,29 +244,56 @@ const RepairsPage = () => {
             </div>
           )}
 
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-4 mt-10">
+          {/* Compact, Clean Pagination */}
+          <div className="flex flex-col items-center gap-3">
+            <div className="inline-flex items-center gap-1 p-1 bg-gray-100 rounded-lg">
+              {/* Prev */}
               <button
-                disabled={page === 1}
-                onClick={() => setPage(p => p - 1)}
-                className="px-4 py-2 border rounded-lg disabled:opacity-40 hover:bg-gray-50 transition disabled:cursor-not-allowed"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1 || modelsLoading}
+                className="w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium text-gray-600
+                         hover:bg-white hover:shadow-sm disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all"
               >
-                Previous
+                ←
               </button>
 
-              <span className="text-sm text-gray-600">
-                Page {page} of {totalPages}
-              </span>
+              {/* Pages */}
+              {getVisiblePages().map((page, idx) => (
+                page === '...' ? (
+                  <span key={idx} className="w-8 h-8 flex items-center justify-center text-gray-400 text-sm">
+                    •••
+                  </span>
+                ) : (
+                  <button
+                    key={idx}
+                    onClick={() => handlePageChange(page)}
+                    disabled={modelsLoading}
+                    className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium transition-all
+                      ${currentPage === page 
+                        ? "bg-white text-indigo-600 shadow-sm ring-1 ring-indigo-100" 
+                        : "text-gray-600 hover:bg-white hover:shadow-sm"
+                      } disabled:opacity-60`}
+                  >
+                    {page}
+                  </button>
+                )
+              ))}
 
+              {/* Next */}
               <button
-                disabled={page === totalPages}
-                onClick={() => setPage(p => p + 1)}
-                className="px-4 py-2 border rounded-lg disabled:opacity-40 hover:bg-gray-50 transition disabled:cursor-not-allowed"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages || modelsLoading}
+                className="w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium text-gray-600
+                         hover:bg-white hover:shadow-sm disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all"
               >
-                Next
+                →
               </button>
             </div>
-          )}
+            
+            <span className="text-xs text-gray-400 font-medium">
+              Page {currentPage} of {totalPages}
+            </span>
+          </div>
         </>
       )}
     </section>
