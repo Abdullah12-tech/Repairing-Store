@@ -42,7 +42,7 @@ const CustomSelect = ({
         type="button"
         disabled={disabled}
         onClick={() => setOpen(o => !o)}
-        className="w-full rounded-lg px-4 py-3 text-left flex items-center justify-between ring-2 ring-advanced"
+        className="w-full rounded-lg px-4 py-3 bg-secondary text-left flex items-center justify-between ring-2 ring-advanced"
       >
         <span className="text-advanced truncate">
           {selectedOption?.label || placeholder}

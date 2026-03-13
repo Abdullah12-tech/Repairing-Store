@@ -21,13 +21,13 @@ const Header = () => {
               <img
                 src={HeaderLogo}
                 alt="logo"
-                className="h-10 w-auto"
+                className="h-8 md:h-10 w-10 md:w-20 "
               />
             </Link>
 
             {/* Desktop Nav */}
             <nav className="hidden lg:flex gap-10 text-advanced font-medium">
-              {["Repairs", "About Us", "Prices", "Contact"].map((item) => (
+              {["Repairs", "About Us", "Prices", "Business"].map((item) => (
                 <Link
                   to={`/${item.toLowerCase().replace(/\s+/g, "")}`}
                   key={item}
@@ -44,7 +44,7 @@ const Header = () => {
 
               <Link
                 to="/repairs"
-                className="hidden sm:inline-flex px-4 py-4 rounded-md text-sm bg-primary text-secondary font-medium"
+                className="hidden sm:inline-flex px-4 py-2 text-sm bg-primary text-secondary font-medium"
               >
                 Book Appointment
               </Link>
@@ -75,12 +75,13 @@ const Header = () => {
         <div className="absolute inset-0 bg-secondary" />
 
         {/* Menu Panel */}
-        <nav className="relative w-[90%] max-w-sm bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 flex flex-col gap-6 text-center shadow-2xl">
+        <nav className="relative w-[90%] max-w-sm bg-white/5 backdrop-blur-xl border border-white/10 text-lg rounded-3xl p-4 flex flex-col gap-2 text-center shadow-2xl">
 
           {[
             { title: "Repairs", desc: "Fix phones & devices" },
             { title: "Prices", desc: "Check service costs" },
-            { title: "Contact Us", desc: "Reach Out to Us." },
+
+            { title: "Business", desc: "Enterprise services" },
           ].map((item) => (
             <Link
               key={item.title}
@@ -88,7 +89,7 @@ const Header = () => {
               onClick={() => setOpen(false)}
               className="group py-3 border-b border-white/10 last:border-none"
             >
-              <p className="text-xl font-semibold text-primary group-hover:text-tertiary transition">
+              <p className="text-8 font-semibold text-primary group-hover:text-tertiary transition">
                 {item.title}
               </p>
 
@@ -102,7 +103,7 @@ const Header = () => {
           <Link
             to="/repairs"
             onClick={() => setOpen(false)}
-            className="mt-6 w-full py-4 rounded-xl bg-primary text-secondary text-lg font-bold hover:scale-[1.02] transition"
+            className="mt-6 w-[200px] py-2 px-2 m-auto rounded-lg bg-primary text-secondary font-md hover:scale-[1.02] transition"
           >
             Book Appointment
           </Link>

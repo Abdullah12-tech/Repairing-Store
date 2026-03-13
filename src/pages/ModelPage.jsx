@@ -169,6 +169,7 @@ const RepairsPage = () => {
               })),
             ]}
             disabled={brandsLoading}
+            className={brandsLoading ? "bg-secondary text-gray-400" : "bg-secondary"}
           />
         </div>
 
@@ -190,7 +191,7 @@ const RepairsPage = () => {
               })),
             ]}
             disabled={!selectedBrand || modelsLoading}
-            className={!selectedBrand ? "bg-gray-50 text-gray-400" : "bg-white"}
+            className={!selectedBrand ? "bg-secondary text-gray-400" : "bg-secondary"}
           />
           {!selectedBrand && (
             <p className="absolute -bottom-6 left-0 text-xs text-gray-400">

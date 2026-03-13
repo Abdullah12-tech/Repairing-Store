@@ -44,12 +44,12 @@ const AppointmentPage = () => {
 
   useEffect(() => {
     const newErrors = {};
-    
+
     if (touched.customerEmail && form.customerEmail) {
       const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.customerEmail);
       if (!emailValid) newErrors.customerEmail = "Valid email required";
     }
-    
+
     if (touched.customerPhoneNumber && form.customerPhoneNumber) {
       const phoneValid = /^\d{7,15}$/.test(form.customerPhoneNumber?.replace(/\s/g, ''));
       if (!phoneValid) newErrors.customerPhoneNumber = "Valid phone required";
@@ -63,12 +63,12 @@ const AppointmentPage = () => {
 
   const validateStep = (stepIndex) => {
     const newErrors = {};
-    
+
     if (stepIndex === 0) {
       if (!form.appointmentDay) newErrors.appointmentDay = "Select a date";
       if (!form.appointmentTime) newErrors.appointmentTime = "Select a time";
     }
-    
+
     if (stepIndex === 1) {
       if (!form.customerFirstName.trim()) newErrors.customerFirstName = "First name required";
       if (!form.customerLastname.trim()) newErrors.customerLastname = "Last name required";
@@ -118,7 +118,7 @@ const AppointmentPage = () => {
 
     try {
       const url = `${import.meta.env.VITE_BASE_URL}/api/Appointments`;
-      
+
       const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -168,7 +168,7 @@ const AppointmentPage = () => {
       </div>
 
       <div className="relative w-full max-w-[420px] z-10">
-        
+
         {/* Service Summary - Compact & richer contrast */}
         <div
           className="mb-6 p-3 rounded-2xl border backdrop-blur-sm flex items-center justify-between"
@@ -180,7 +180,7 @@ const AppointmentPage = () => {
           <div className="flex items-center gap-3">
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shadow-inner"
-              style={{ 
+              style={{
                 backgroundColor: 'rgba(var(--tertiary), 0.25)',  // Stronger gold accent
                 color: 'rgb(var(--primary))'
               }}
@@ -255,7 +255,7 @@ const AppointmentPage = () => {
           }}
         >
           <AnimatePresence mode="wait">
-            
+
             {/* STEP 0: Time */}
             {step === 0 && (
               <motion.div
@@ -267,7 +267,7 @@ const AppointmentPage = () => {
                 className="h-full flex flex-col"
               >
                 <h2 className="text-lg font-medium mb-6 opacity-90">When should we arrive?</h2>
-                
+
                 <div className="space-y-5 flex-1">
                   <div>
                     <label className="block text-xs opacity-50 mb-2 uppercase tracking-wider">Date</label>
@@ -279,8 +279,8 @@ const AppointmentPage = () => {
                       className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border"
                       style={{
                         backgroundColor: 'rgba(var(--secondary), 0.08)',
-                        borderColor: errors.appointmentDay 
-                          ? 'rgba(239, 68, 68, 0.5)' 
+                        borderColor: errors.appointmentDay
+                          ? 'rgba(239, 68, 68, 0.5)'
                           : 'rgba(var(--secondary), 0.2)',
                         color: 'rgb(var(--secondary))'
                       }}
@@ -336,6 +336,7 @@ const AppointmentPage = () => {
             )}
 
             {/* STEP 1: Details */}
+            {/* STEP 1: Details - RESPONSIVE FIX */}
             {step === 1 && (
               <motion.div
                 key="details"
@@ -343,172 +344,177 @@ const AppointmentPage = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -30 }}
                 transition={{ duration: 0.25 }}
-                className="h-full flex flex-col space-y-4 max-h-[440px] pr-1"
+                className="h-full flex flex-col overflow-hidden"  // Remove max-h-[440px], add overflow-hidden
               >
-                <h2 className="text-lg font-medium mb-2 opacity-90">Your details</h2>
-                
-                {/* Contact Section */}
-                <div className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <input
-                        placeholder="First name"
-                        value={form.customerFirstName}
-                        onChange={(e) => setForm({ ...form, customerFirstName: e.target.value })}
-                        onBlur={() => handleBlur('customerFirstName')}
-                        className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40"
-                        style={{
-                          backgroundColor: 'rgba(var(--secondary), 0.08)',
-                          borderColor: errors.customerFirstName 
-                            ? 'rgba(239, 68, 68, 0.5)' 
-                            : 'rgba(var(--secondary), 0.2)',
-                          color: 'rgb(var(--secondary))'
-                        }}
-                      />
-                      {errors.customerFirstName && (
-                        <span className="text-xs mt-1 block text-red-400">{errors.customerFirstName}</span>
-                      )}
+                <h2 className="text-lg font-medium mb-4 opacity-90 shrink-0">Your details</h2>
+
+                {/* Scrollable form content */}
+                <div className="flex-1 overflow-y-auto space-y-4 pr-1 min-h-0">
+
+                  {/* Contact Section */}
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <input
+                          placeholder="First name"
+                          value={form.customerFirstName}
+                          onChange={(e) => setForm({ ...form, customerFirstName: e.target.value })}
+                          onBlur={() => handleBlur('customerFirstName')}
+                          className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40"
+                          style={{
+                            backgroundColor: 'rgba(var(--secondary), 0.08)',
+                            borderColor: errors.customerFirstName
+                              ? 'rgba(239, 68, 68, 0.5)'
+                              : 'rgba(var(--secondary), 0.2)',
+                            color: 'rgb(var(--secondary))'
+                          }}
+                        />
+                        {errors.customerFirstName && (
+                          <span className="text-xs mt-1 block text-red-400">{errors.customerFirstName}</span>
+                        )}
+                      </div>
+                      <div>
+                        <input
+                          placeholder="Last name"
+                          value={form.customerLastname}
+                          onChange={(e) => setForm({ ...form, customerLastname: e.target.value })}
+                          onBlur={() => handleBlur('customerLastname')}
+                          className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40"
+                          style={{
+                            backgroundColor: 'rgba(var(--secondary), 0.08)',
+                            borderColor: errors.customerLastname
+                              ? 'rgba(239, 68, 68, 0.5)'
+                              : 'rgba(var(--secondary), 0.2)',
+                            color: 'rgb(var(--secondary))'
+                          }}
+                        />
+                        {errors.customerLastname && (
+                          <span className="text-xs mt-1 block text-red-400">{errors.customerLastname}</span>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <input
-                        placeholder="Last name"
-                        value={form.customerLastname}
-                        onChange={(e) => setForm({ ...form, customerLastname: e.target.value })}
-                        onBlur={() => handleBlur('customerLastname')}
-                        className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40"
-                        style={{
-                          backgroundColor: 'rgba(var(--secondary), 0.08)',
-                          borderColor: errors.customerLastname 
-                            ? 'rgba(239, 68, 68, 0.5)' 
-                            : 'rgba(var(--secondary), 0.2)',
-                          color: 'rgb(var(--secondary))'
-                        }}
-                      />
-                      {errors.customerLastname && (
-                        <span className="text-xs mt-1 block text-red-400">{errors.customerLastname}</span>
-                      )}
-                    </div>
+
+                    <input
+                      type="email"
+                      placeholder="Email address"
+                      value={form.customerEmail}
+                      onChange={(e) => setForm({ ...form, customerEmail: e.target.value })}
+                      onBlur={() => handleBlur('customerEmail')}
+                      className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40"
+                      style={{
+                        backgroundColor: 'rgba(var(--secondary), 0.08)',
+                        borderColor: errors.customerEmail
+                          ? 'rgba(239, 68, 68, 0.5)'
+                          : 'rgba(var(--secondary), 0.2)',
+                        color: 'rgb(var(--secondary))'
+                      }}
+                    />
+                    {errors.customerEmail && (
+                      <span className="text-xs mt-1 block text-red-400">{errors.customerEmail}</span>
+                    )}
+
+                    <input
+                      type="tel"
+                      placeholder="Phone number"
+                      value={form.customerPhoneNumber}
+                      onChange={(e) => setForm({ ...form, customerPhoneNumber: e.target.value })}
+                      onBlur={() => handleBlur('customerPhoneNumber')}
+                      className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40"
+                      style={{
+                        backgroundColor: 'rgba(var(--secondary), 0.08)',
+                        borderColor: errors.customerPhoneNumber
+                          ? 'rgba(239, 68, 68, 0.5)'
+                          : 'rgba(var(--secondary), 0.2)',
+                        color: 'rgb(var(--secondary))'
+                      }}
+                    />
+                    {errors.customerPhoneNumber && (
+                      <span className="text-xs mt-1 block text-red-400">{errors.customerPhoneNumber}</span>
+                    )}
                   </div>
 
-                  <input
-                    type="email"
-                    placeholder="Email address"
-                    value={form.customerEmail}
-                    onChange={(e) => setForm({ ...form, customerEmail: e.target.value })}
-                    onBlur={() => handleBlur('customerEmail')}
-                    className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40"
-                    style={{
-                      backgroundColor: 'rgba(var(--secondary), 0.08)',
-                      borderColor: errors.customerEmail 
-                        ? 'rgba(239, 68, 68, 0.5)' 
-                        : 'rgba(var(--secondary), 0.2)',
-                      color: 'rgb(var(--secondary))'
-                    }}
-                  />
-                  {errors.customerEmail && (
-                    <span className="text-xs mt-1 block text-red-400">{errors.customerEmail}</span>
-                  )}
+                  {/* Location Section */}
+                  <div className="space-y-3">
+                    <label className="block text-xs opacity-50 uppercase tracking-wider">Service Location</label>
 
-                  <input
-                    type="tel"
-                    placeholder="Phone number"
-                    value={form.customerPhoneNumber}
-                    onChange={(e) => setForm({ ...form, customerPhoneNumber: e.target.value })}
-                    onBlur={() => handleBlur('customerPhoneNumber')}
-                    className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40"
-                    style={{
-                      backgroundColor: 'rgba(var(--secondary), 0.08)',
-                      borderColor: errors.customerPhoneNumber 
-                        ? 'rgba(239, 68, 68, 0.5)' 
-                        : 'rgba(var(--secondary), 0.2)',
-                      color: 'rgb(var(--secondary))'
-                    }}
-                  />
-                  {errors.customerPhoneNumber && (
-                    <span className="text-xs mt-1 block text-red-400">{errors.customerPhoneNumber}</span>
-                  )}
-                </div>
+                    <input
+                      placeholder="Street address"
+                      value={form.customerAddress}
+                      onChange={(e) => setForm({ ...form, customerAddress: e.target.value })}
+                      className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40"
+                      style={{
+                        backgroundColor: 'rgba(var(--secondary), 0.08)',
+                        borderColor: errors.customerAddress
+                          ? 'rgba(239, 68, 68, 0.5)'
+                          : 'rgba(var(--secondary), 0.2)',
+                        color: 'rgb(var(--secondary))'
+                      }}
+                    />
+                    {errors.customerAddress && (
+                      <span className="text-xs mt-1 block text-red-400">{errors.customerAddress}</span>
+                    )}
 
-                {/* Location Section */}
-                <div className="space-y-3 pt-2">
-                  <label className="block text-xs opacity-50 uppercase tracking-wider">Service Location</label>
-                  
-                  <input
-                    placeholder="Street address"
-                    value={form.customerAddress}
-                    onChange={(e) => setForm({ ...form, customerAddress: e.target.value })}
-                    className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40"
-                    style={{
-                      backgroundColor: 'rgba(var(--secondary), 0.08)',
-                      borderColor: errors.customerAddress 
-                        ? 'rgba(239, 68, 68, 0.5)' 
-                        : 'rgba(var(--secondary), 0.2)',
-                      color: 'rgb(var(--secondary))'
-                    }}
-                  />
-                  {errors.customerAddress && (
-                    <span className="text-xs mt-1 block text-red-400">{errors.customerAddress}</span>
-                  )}
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <input
-                        placeholder="City"
-                        value={form.customerCity}
-                        onChange={(e) => setForm({ ...form, customerCity: e.target.value })}
-                        className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40"
-                        style={{
-                          backgroundColor: 'rgba(var(--secondary), 0.08)',
-                          borderColor: errors.customerCity 
-                            ? 'rgba(239, 68, 68, 0.5)' 
-                            : 'rgba(var(--secondary), 0.2)',
-                          color: 'rgb(var(--secondary))'
-                        }}
-                      />
-                      {errors.customerCity && (
-                        <span className="text-xs mt-1 block text-red-400">{errors.customerCity}</span>
-                      )}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <input
+                          placeholder="City"
+                          value={form.customerCity}
+                          onChange={(e) => setForm({ ...form, customerCity: e.target.value })}
+                          className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40"
+                          style={{
+                            backgroundColor: 'rgba(var(--secondary), 0.08)',
+                            borderColor: errors.customerCity
+                              ? 'rgba(239, 68, 68, 0.5)'
+                              : 'rgba(var(--secondary), 0.2)',
+                            color: 'rgb(var(--secondary))'
+                          }}
+                        />
+                        {errors.customerCity && (
+                          <span className="text-xs mt-1 block text-red-400">{errors.customerCity}</span>
+                        )}
+                      </div>
+                      <div>
+                        <input
+                          placeholder="State"
+                          value={form.customerState}
+                          onChange={(e) => setForm({ ...form, customerState: e.target.value })}
+                          className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40"
+                          style={{
+                            backgroundColor: 'rgba(var(--secondary), 0.08)',
+                            borderColor: errors.customerState
+                              ? 'rgba(239, 68, 68, 0.5)'
+                              : 'rgba(var(--secondary), 0.2)',
+                            color: 'rgb(var(--secondary))'
+                          }}
+                        />
+                        {errors.customerState && (
+                          <span className="text-xs mt-1 block text-red-400">{errors.customerState}</span>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <input
-                        placeholder="State"
-                        value={form.customerState}
-                        onChange={(e) => setForm({ ...form, customerState: e.target.value })}
-                        className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40"
-                        style={{
-                          backgroundColor: 'rgba(var(--secondary), 0.08)',
-                          borderColor: errors.customerState 
-                            ? 'rgba(239, 68, 68, 0.5)' 
-                            : 'rgba(var(--secondary), 0.2)',
-                          color: 'rgb(var(--secondary))'
-                        }}
-                      />
-                      {errors.customerState && (
-                        <span className="text-xs mt-1 block text-red-400">{errors.customerState}</span>
-                      )}
-                    </div>
+
+                    <textarea
+                      placeholder="Notes (optional)"
+                      value={form.comment}
+                      onChange={(e) => setForm({ ...form, comment: e.target.value })}
+                      rows={2}
+                      className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40 resize-none"
+                      style={{
+                        backgroundColor: 'rgba(var(--secondary), 0.08)',
+                        borderColor: 'rgba(var(--secondary), 0.2)',
+                        color: 'rgb(var(--secondary))'
+                      }}
+                    />
                   </div>
-
-                  <textarea
-                    placeholder="Notes (optional)"
-                    value={form.comment}
-                    onChange={(e) => setForm({ ...form, comment: e.target.value })}
-                    rows={2}
-                    className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border placeholder:opacity-40 resize-none"
-                    style={{
-                      backgroundColor: 'rgba(var(--secondary), 0.08)',
-                      borderColor: 'rgba(var(--secondary), 0.2)',
-                      color: 'rgb(var(--secondary))'
-                    }}
-                  />
                 </div>
 
-                <div className="mt-auto pt-4 flex gap-3">
+                {/* Buttons - moved outside scroll area, fixed at bottom */}
+                <div className="pt-4 flex gap-3 shrink-0">
                   <button
                     onClick={handleBack}
-                    className="px-6 py-4 rounded-2xl text-sm font-medium transition-all hover:brightness-110"
+                    className="px-5 py-3 rounded-xl text-sm font-medium transition-all hover:brightness-110"
                     style={{
-                      backgroundColor: 'rgba(var(--secondary), 0.15)',   // Better contrast back button
+                      backgroundColor: 'rgba(var(--secondary), 0.15)',
                       color: 'rgb(var(--secondary))'
                     }}
                   >
@@ -516,7 +522,7 @@ const AppointmentPage = () => {
                   </button>
                   <button
                     onClick={handleNext}
-                    className="flex-1 py-4 rounded-2xl font-semibold text-base transition-all active:scale-[0.98] hover:brightness-110"
+                    className="flex-1 py-3 rounded-xl font-semibold text-sm transition-all active:scale-[0.98] hover:brightness-110"
                     style={{
                       backgroundColor: 'rgb(var(--tertiary))',
                       color: 'rgb(var(--primary))'
@@ -539,13 +545,13 @@ const AppointmentPage = () => {
                 className="h-full flex flex-col"
               >
                 <h2 className="text-lg font-medium mb-6 opacity-90">Review & confirm</h2>
-                
+
                 <div className="space-y-4 flex-1">
                   {/* Summary Card */}
                   <div
                     className="p-4 rounded-2xl space-y-3 text-sm"
-                    style={{ 
-                      backgroundColor: 'rgba(var(--secondary), 0.08)', 
+                    style={{
+                      backgroundColor: 'rgba(var(--secondary), 0.08)',
                       border: '1px solid rgba(var(--secondary), 0.12)'
                     }}
                   >
@@ -589,7 +595,7 @@ const AppointmentPage = () => {
                   <div
                     className="p-4 rounded-2xl flex justify-between items-center"
                     style={{
-                      backgroundColor: 'rgba(var(--tertiary), 0.12)',
+                      backgroundColor: 'rgba(var(--tertiary))',
                       border: '1px solid rgba(var(--tertiary), 0.3)'
                     }}
                   >

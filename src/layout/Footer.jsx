@@ -32,7 +32,7 @@ const Footer = () => {
               </Link>
             </li>
             <li>
-              <Link to="/reviews" className="hover:text-[var(--tertiary)] transition-colors">
+              <Link to="#testimonial" className="hover:text-[var(--tertiary)] transition-colors">
                 What customers say
               </Link>
             </li>
@@ -67,13 +67,9 @@ const Footer = () => {
                 Prices
               </Link>
             </li>
+            
             <li>
-              <Link to="/support" className="hover:text-[var(--tertiary)] transition-colors">
-                Support
-              </Link>
-            </li>
-            <li>
-              <Link to="/business" className="hover:text-[var(--tertiary)] transition-colors">
+              <Link to="/contact" className="hover:text-[var(--tertiary)] transition-colors">
                 Business
               </Link>
             </li>

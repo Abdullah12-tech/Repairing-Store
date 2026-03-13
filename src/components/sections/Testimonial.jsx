@@ -75,7 +75,7 @@ const Stars = ({ rating }) => (
 
 const Testimonials = () => {
   return (
-    <section className="py-24 bg-gradient-to-br from-secondary via-primary to-black text-white">
+    <section id='testimonial' className="py-24 bg-gradient-to-br from-secondary via-primary to-black text-white">
 
       {/* 🔹 Component-scoped CSS */}
       <style>{`
