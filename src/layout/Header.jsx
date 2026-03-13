@@ -85,7 +85,7 @@ const Header = () => {
           ].map((item) => (
             <Link
               key={item.title}
-              to={`/${item.title.toLowerCase()}`}
+              to={`/${item.title.toLowerCase() === "business" ? "contact" : item.title.toLowerCase()}`}
               onClick={() => setOpen(false)}
               className="group py-3 border-b border-white/10 last:border-none"
             >
