@@ -30,7 +30,7 @@ const HeroSection = () => {
             href="/contact"
             className="w-full sm:w-1/2 px-6 py-3 sm:py-3.5 bg-tertiary text-advanced text-base sm:text-lg font-semibold rounded-md shadow-sm hover:shadow-lg transition"
           >
-            Visit a Store
+            Visit Our Store
           </a>
 
         </div>
