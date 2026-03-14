@@ -30,7 +30,7 @@ const Header = () => {
               {[
                 { title: "Repairs", desc: "Fix phones & devices", path: "/repairs" },
                 { title: "Prices", desc: "Check service costs", path: "/prices" },
-                { title: "About Us", desc: "Learn more about us", path: "/about" },
+                { title: "About Us", desc: "Learn more about us", path: "/aboutus" },
                 { title: "Contact Us", desc: "Get in touch with us", path: "/contact" },
               ].map((item) => (
                 <Link
@@ -88,7 +88,7 @@ const Header = () => {
           {[
             { title: "Repairs", desc: "Fix phones & devices", path: "/repairs" },
             { title: "Prices", desc: "Check service costs", path: "/prices" },
-            { title: "About Us", desc: "Learn more about us", path: "/about" },
+            { title: "About Us", desc: "Learn more about us", path: "/aboutus" },
             { title: "Contact Us", desc: "Get in touch with us", path: "/contact" },
           ].map((item) => (
             <Link
