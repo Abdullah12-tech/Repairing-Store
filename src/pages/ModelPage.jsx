@@ -139,6 +139,9 @@ const RepairsPage = () => {
   };
 
   const isLoading = brandsLoading || modelsLoading;
+  const filteredModels = selectedModel
+  ? models.filter(m => (m.id || m.Id)?.toString() === selectedModel)
+  : models;
 
   return (
     <>
@@ -218,7 +221,7 @@ const RepairsPage = () => {
         ) : (
           <>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-8">
-              {models.map(model => (
+              {filteredModels.map(model => (
                 <div
                   key={model.id || model.Id}
                   onClick={() => handleModelClick(model.id || model.Id)}

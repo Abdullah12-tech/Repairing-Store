@@ -27,13 +27,18 @@ const Header = () => {
 
             {/* Desktop Nav */}
             <nav className="hidden lg:flex gap-10 text-advanced font-medium">
-              {["Repairs", "About Us", "Prices", "Contact"].map((item) => (
+              {[
+                { title: "Repairs", desc: "Fix phones & devices", path: "/repairs" },
+                { title: "Prices", desc: "Check service costs", path: "/prices" },
+                { title: "About Us", desc: "Learn more about us", path: "/about" },
+                { title: "Contact Us", desc: "Get in touch with us", path: "/contact" },
+              ].map((item) => (
                 <Link
-                  to={`/${item.toLowerCase().replace(/\s+/g, "")}`}
-                  key={item}
+                  to={`${item.path.toLowerCase().replace(/\s+/g, "")}`}
+                  key={item.title}
                   className="relative cursor-pointer group"
                 >
-                  {item}
+                  {item.title}
                   <span className="absolute left-1/2 bottom-[-6px] h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full group-hover:left-0" />
                 </Link>
               ))}
@@ -84,7 +89,7 @@ const Header = () => {
             { title: "Repairs", desc: "Fix phones & devices", path: "/repairs" },
             { title: "Prices", desc: "Check service costs", path: "/prices" },
             { title: "About Us", desc: "Learn more about us", path: "/about" },
-            { title: "Contact", desc: "Get in touch with us", path: "/contact" },
+            { title: "Contact Us", desc: "Get in touch with us", path: "/contact" },
           ].map((item) => (
             <Link
               key={item.title}

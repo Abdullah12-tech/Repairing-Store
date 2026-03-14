@@ -70,7 +70,7 @@ const Footer = () => {
             
             <li>
               <Link to="/contact" className="hover:text-[var(--tertiary)] transition-colors">
-                Contact
+                Contact Us
               </Link>
             </li>
           </ul>
