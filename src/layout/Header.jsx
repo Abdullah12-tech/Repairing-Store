@@ -21,13 +21,13 @@ const Header = () => {
               <img
                 src={HeaderLogo}
                 alt="logo"
-                className="h-8 md:h-10 w-10 md:w-20 "
+                className="h-10 w-auto"
               />
             </Link>
 
             {/* Desktop Nav */}
             <nav className="hidden lg:flex gap-10 text-advanced font-medium">
-              {["Repairs", "About Us", "Prices", "Business"].map((item) => (
+              {["Repairs", "About Us", "Prices", "Contact"].map((item) => (
                 <Link
                   to={`/${item.toLowerCase().replace(/\s+/g, "")}`}
                   key={item}
@@ -44,7 +44,7 @@ const Header = () => {
 
               <Link
                 to="/repairs"
-                className="hidden sm:inline-flex px-4 py-2 text-sm bg-primary text-secondary font-medium"
+                className="hidden sm:inline-flex px-4 py-3 rounded-lg text-sm bg-primary text-secondary font-medium"
               >
                 Book Appointment
               </Link>
@@ -69,31 +69,34 @@ const Header = () => {
       {/* Mobile Radial Menu */}
       <div
         className={`fixed inset-0 z-40 flex items-center justify-center transition-all duration-500 ease-in-out
-  ${open ? "clip-open" : "clip-closed"}`}
+        ${open ? "clip-open" : "clip-closed"}`}
       >
         {/* Background */}
-        <div className="absolute inset-0 bg-secondary" />
+        <div
+          className="absolute inset-0 bg-secondary"
+          onClick={() => setOpen(false)}
+        />
 
         {/* Menu Panel */}
-        <nav className="relative w-[90%] max-w-sm bg-white/5 backdrop-blur-xl border border-white/10 text-lg rounded-3xl p-4 flex flex-col gap-2 text-center shadow-2xl">
+        <nav className="relative w-[240px] bg-white/5 mt-2 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex flex-col gap-3 text-center shadow-2xl">
 
           {[
-            { title: "Repairs", desc: "Fix phones & devices" },
-            { title: "Prices", desc: "Check service costs" },
-
-            { title: "Business", desc: "Enterprise services" },
+            { title: "Repairs", desc: "Fix phones & devices", path: "/repairs" },
+            { title: "Prices", desc: "Check service costs", path: "/prices" },
+            { title: "About Us", desc: "Learn more about us", path: "/about" },
+            { title: "Contact", desc: "Get in touch with us", path: "/contact" },
           ].map((item) => (
             <Link
               key={item.title}
-              to={`/${item.title.toLowerCase() === "business" ? "contact" : item.title.toLowerCase()}`}
+              to={item.path}
               onClick={() => setOpen(false)}
-              className="group py-3 border-b border-white/10 last:border-none"
+              className="group py-2 border-b border-white/10 last:border-none"
             >
-              <p className="text-8 font-semibold text-primary group-hover:text-tertiary transition">
+              <p className="text-base font-semibold text-primary group-hover:text-tertiary transition">
                 {item.title}
               </p>
 
-              <span className="text-sm text-advanced opacity-70">
+              <span className="text-xs text-advanced opacity-70">
                 {item.desc}
               </span>
             </Link>
@@ -103,10 +106,11 @@ const Header = () => {
           <Link
             to="/repairs"
             onClick={() => setOpen(false)}
-            className="mt-6 w-[200px] py-2 px-2 m-auto rounded-lg bg-primary text-secondary font-md hover:scale-[1.02] transition"
+            className="mt-4 w-[170px] py-2 px-2 m-auto rounded-lg bg-primary text-secondary hover:scale-[1.02] transition"
           >
             Book Appointment
           </Link>
+
         </nav>
       </div>
 

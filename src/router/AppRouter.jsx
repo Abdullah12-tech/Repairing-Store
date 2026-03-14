@@ -17,6 +17,7 @@ import AppointmentPage from '../pages/AppointmentBook'
 import ScrollToTop from '../utils/scrollToTop'
 import { FiMessageCircle } from 'react-icons/fi'
 import ContactPage from '../pages/ContactUs'
+import WhatsAppSupport from '../utils/support'
 
 const Shell = () => (
   <div style={{ minHeight: '100vh', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
@@ -26,18 +27,7 @@ const Shell = () => (
     </main>
     <Testimonials />
     <ContactUs />
-    
-
-<button
-  className="fixed z-50 bottom-5 right-5 sm:bottom-6 sm:right-6
-  w-12 h-12 sm:w-14 sm:h-14
-  flex items-center justify-center
-  bg-yellow-400 text-black
-  rounded-full shadow-lg
-  hover:scale-105 active:scale-95 transition"
->
-  <FiMessageCircle size={22} />
-</button>
+    <WhatsAppSupport />
     <Footer />
   </div>
 )
@@ -49,7 +39,7 @@ function ShellWrapper() {
 export default function AppRouter() {
   return (
     <BrowserRouter>
-      <ScrollToTop/>
+      <ScrollToTop />
 
       <RepairsProvider>
         <Routes>

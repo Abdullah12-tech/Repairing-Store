@@ -114,7 +114,7 @@ const SelectParts = () => {
               onClick={() => handleSelectPart(part)}
               disabled={!price}
               className={`border bg-secondary rounded-lg p-4 text-left transition shadow-sm
-                ${price ? "hover:shadow-md cursor-pointer" : "opacity-50 cursor-not-allowed"}
+                NGN{price ? "hover:shadow-md cursor-pointer" : "opacity-50 cursor-not-allowed"}
               `}
             >
               <img
@@ -129,7 +129,7 @@ const SelectParts = () => {
 
               {price ? (
                 <p className="text-center text-sm text-tertiary mt-1">
-                  ${price.cost} · {price.dUration}
+                  NGN{price.cost} · {price.dUration}
                 </p>
               ) : (
                 <p className="text-center text-sm text-tertiary mt-1">

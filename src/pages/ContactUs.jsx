@@ -68,7 +68,7 @@ const ContactPage = () => {
   return (
     <section className="min-h-screen bg-[rgb(var(--secondary))] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden shadow-2xl bg-[rgba(var(--primary),0.5)] border border-[rgba(var(--tertiary),0.2)]">
+        <div className="grid lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden shadow-2xl bg-[rgba(var(--primary),0.5)] border-none">
           
           {/* Left Side - Contact Info */}
           <div className="relative bg-primary p-8 lg:p-12 flex flex-col gap-5">
@@ -107,7 +107,7 @@ const ContactPage = () => {
                 <a
                   key={index}
                   href={item.href}
-                  className="group flex items-center gap-4 p-4 rounded-xl bg-[rgba(var(--secondary),0.1)] backdrop-blur-sm border border-[rgba(var(--secondary),0.1)] hover:bg-[rgba(var(--tertiary),0.2)] hover:border-[rgb(var(--tertiary))] transition-all duration-300"
+                  className="group flex items-center gap-4 p-4 rounded-xl bg-[rgba(var(--secondary),0.1)] backdrop-blur-sm border border-[rgba(var(--secondary))] hover:bg-[rgba(var(--tertiary),0.2)] hover:border-[rgb(var(--tertiary))] transition-all duration-300"
                 >
                   <div className="text-[rgb(var(--tertiary))] group-hover:scale-110 transition-transform duration-300">
                     {item.icon}
@@ -157,7 +157,7 @@ const ContactPage = () => {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-[rgba(var(--secondary),0.05)] border border-[rgba(var(--secondary),0.2)] rounded-lg text-[rgb(var(--secondary))] placeholder-[rgba(var(--secondary),0.3)] focus:outline-none focus:border-[rgb(var(--tertiary))] focus:ring-1 focus:ring-[rgb(var(--tertiary))] transition-all duration-300"
+                    className="w-full px-4 py-3 bg-[rgba(var(--secondary),0.05)] border border-[rgba(var(--secondary),0.2)] rounded-lg text-[rgb(var(--secondary))] placeholder-[rgba(var(--advanced) 0.3,)] focus:outline-none focus:border-[rgb(var(--tertiary))] focus:ring-1 focus:ring-[rgb(var(--tertiary))] transition-all duration-300"
                     placeholder="John Doe"
                   />
                 </div>
@@ -173,7 +173,7 @@ const ContactPage = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-[rgba(var(--secondary),0.05)] border border-[rgba(var(--secondary),0.2)] rounded-lg text-[rgb(var(--secondary))] placeholder-[rgba(var(--secondary),0.3)] focus:outline-none focus:border-[rgb(var(--tertiary))] focus:ring-1 focus:ring-[rgb(var(--tertiary))] transition-all duration-300"
+                    className="w-full px-4 py-3 bg-[rgba(var(--secondary),0.05)] border border-[rgba(var(--secondary),0.2)] rounded-lg text-[rgb(var(--secondary))] placeholder-[rgba(var(--advanced) 0.3,)] focus:outline-none focus:border-[rgb(var(--tertiary))] focus:ring-1 focus:ring-[rgb(var(--tertiary))] transition-all duration-300"
                     placeholder="john@example.com"
                   />
                 </div>
@@ -188,7 +188,7 @@ const ContactPage = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-[rgba(var(--secondary),0.05)] border border-[rgba(var(--secondary),0.2)] rounded-lg text-[rgb(var(--secondary))] placeholder-[rgba(var(--secondary),0.3)] focus:outline-none focus:border-[rgb(var(--tertiary))] focus:ring-1 focus:ring-[rgb(var(--tertiary))] transition-all duration-300"
+                    className="w-full px-4 py-3 bg-[rgba(var(--secondary),0.05)] border border-[rgba(var(--secondary),0.2)] rounded-lg text-[rgb(var(--secondary))] placeholder-[rgba(var(--advanced) 0.3,)] focus:outline-none focus:border-[rgb(var(--tertiary))] focus:ring-1 focus:ring-[rgb(var(--tertiary))] transition-all duration-300"
                     placeholder="+1 (555) 000-0000"
                   />
                 </div>
@@ -204,7 +204,7 @@ const ContactPage = () => {
                     onChange={handleChange}
                     required
                     rows={4}
-                    className="w-full px-4 py-3 bg-[rgba(var(--secondary),0.05)] border border-[rgba(var(--secondary),0.2)] rounded-lg text-[rgb(var(--secondary))] placeholder-[rgba(var(--secondary),0.3)] focus:outline-none focus:border-[rgb(var(--tertiary))] focus:ring-1 focus:ring-[rgb(var(--tertiary))] transition-all duration-300 resize-none"
+                    className="w-full px-4 py-3 bg-[rgba(var(--secondary),0.05)] border border-[rgba(var(--secondary),0.2)] rounded-lg text-[rgb(var(--secondary))] placeholder-[rgba(var(--advanced) 0.3,)] focus:outline-none focus:border-[rgb(var(--tertiary))] focus:ring-1 focus:ring-[rgb(var(--tertiary))] transition-all duration-300 resize-none"
                     placeholder="Tell us about your project..."
                   />
                 </div>

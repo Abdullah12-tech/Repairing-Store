@@ -177,7 +177,7 @@ export default function PricingPage() {
 function getPartCost(parts, partName) {
   const part = parts.find((x) => (x.phonePartName || x.phonePart?.name) === partName);
   if (!part) return "—";
-  return part.cost ? `€${part.cost}` : "—";
+  return part.cost ? `NGN${part.cost}` : "—";
 }
 
 function Spinner({ small, large }) {
