@@ -3,7 +3,7 @@ const contactImg =
 
 const ContactUs = () => {
   return (
-    <section className="bg-secondary py-16 px-6">
+    <section className="bg-secondary py-16 px-6 ">
       <div className="max-w-6xl m-auto flex flex-col md:flex-row items-center justify-center gap-10">
         
         {/* Image */}
