@@ -93,12 +93,12 @@ const ContactPage = () => {
   ];
 
   return (
-    <section className="min-h-screen bg-[rgb(var(--secondary))] py-10 sm:py-12 px-2 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto overflow-x-hidden">
+    <section className="min-h-screen bg-[rgb(var(--secondary))] py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto overflow-hidden">
         <div
           className="
             grid grid-cols-1 lg:grid-cols-2 
-            gap-6 lg:gap-0 
+            gap-0 
             rounded-3xl overflow-hidden 
             shadow-2xl 
             bg-[rgba(var(--primary),0.5)] 
@@ -106,7 +106,7 @@ const ContactPage = () => {
           "
         >
           {/* Left Side - Contact Info */}
-          <div className="relative bg-primary p-5 sm:p-8 lg:p-12 flex flex-col gap-5 min-h-[480px] lg:min-h-auto">
+          <div className="relative bg-primary p-6 sm:p-8 lg:p-12 flex flex-col gap-6 min-h-[500px] lg:min-h-full">
             {/* Background Image with Overlay */}
             <div className="absolute inset-0 z-0 pointer-events-none">
               <img
@@ -118,31 +118,31 @@ const ContactPage = () => {
             </div>
 
             {/* Content */}
-            <div className="relative z-10 flex flex-col flex-grow">
-              <div className="inline-flex items-center gap-2 mb-5 sm:mb-6">
+            <div className="relative z-10 flex flex-col h-full">
+              <div className="inline-flex items-center gap-2 mb-4 sm:mb-6">
                 <div className="w-8 h-px bg-[rgb(var(--tertiary))]" />
                 <span className="text-[rgb(var(--tertiary))] text-xs sm:text-sm font-medium tracking-widest uppercase">
                   Get in Touch
                 </span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[rgb(var(--secondary))] leading-tight mb-4">
+              <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-[rgb(var(--secondary))] leading-tight mb-3 sm:mb-4">
                 Let's Start a<br />
                 <span className="text-[rgb(var(--tertiary))]">Conversation</span>
               </h1>
 
-              <p className="text-[rgb(var(--secondary))] opacity-70 text-base sm:text-lg max-w-md leading-relaxed mt-auto lg:mt-0">
+              <p className="text-[rgb(var(--secondary))] opacity-70 text-sm sm:text-base max-w-md leading-relaxed mt-auto lg:mt-0">
                 Have a project in mind? We'd love to hear about it. Send us a message and we'll respond as soon as possible.
               </p>
 
               {/* Contact Cards */}
-              <div className="space-y-4 mt-8">
+              <div className="space-y-3 sm:space-y-4 mt-6 sm:mt-8">
                 {contactInfo.map((item, index) => (
                   <a
                     key={index}
                     href={item.href}
                     className="
-                      group flex items-center gap-4 p-4 rounded-xl 
+                      group flex items-start sm:items-center gap-4 p-3 sm:p-4 rounded-xl 
                       bg-[rgba(var(--secondary),0.1)] backdrop-blur-sm 
                       border border-[rgba(var(--secondary),0.3)] 
                       hover:bg-[rgba(var(--tertiary),0.15)] 
@@ -150,14 +150,14 @@ const ContactPage = () => {
                       transition-all duration-300
                     "
                   >
-                    <div className="text-[rgb(var(--tertiary))] group-hover:scale-110 transition-transform duration-300 shrink-0">
+                    <div className="text-[rgb(var(--tertiary))] group-hover:scale-110 transition-transform duration-300 shrink-0 mt-0.5 sm:mt-0">
                       {item.icon}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-[rgb(var(--tertiary))] text-xs font-medium uppercase tracking-wider mb-1">
                         {item.label}
                       </div>
-                      <div className="text-[rgb(var(--secondary))] text-sm sm:text-base font-medium truncate">
+                      <div className="text-[rgb(var(--secondary))] text-sm sm:text-base font-medium break-words">
                         {item.value}
                       </div>
                     </div>
@@ -168,10 +168,10 @@ const ContactPage = () => {
           </div>
 
           {/* Right Side - Form */}
-          <div className="p-5 sm:p-8 lg:p-12 bg-[rgb(var(--primary))] backdrop-blur-sm">
+          <div className="p-6 sm:p-8 lg:p-12 bg-[rgb(var(--primary))] backdrop-blur-sm">
             <div className="max-w-lg mx-auto w-full">
-              <div className="mb-8">
-                <h2 className="text-2xl sm:text-3xl font-bold text-[rgb(var(--secondary))] mb-2">
+              <div className="mb-6 sm:mb-8">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[rgb(var(--secondary))] mb-2">
                   Send a Message
                 </h2>
                 <p className="text-[rgb(var(--secondary))] opacity-60 text-sm sm:text-base">
@@ -179,7 +179,7 @@ const ContactPage = () => {
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
                 {/* Name */}
                 <div>
                   <label className="block text-[rgb(var(--tertiary))] text-xs font-medium uppercase tracking-wider mb-2">
@@ -200,6 +200,7 @@ const ContactPage = () => {
                       focus:outline-none focus:border-[rgb(var(--tertiary))] 
                       focus:ring-1 focus:ring-[rgb(var(--tertiary))] 
                       transition-all duration-300
+                      text-base
                     "
                     placeholder="John Doe"
                   />
@@ -225,6 +226,7 @@ const ContactPage = () => {
                       focus:outline-none focus:border-[rgb(var(--tertiary))] 
                       focus:ring-1 focus:ring-[rgb(var(--tertiary))] 
                       transition-all duration-300
+                      text-base
                     "
                     placeholder="john@example.com"
                   />
@@ -249,6 +251,7 @@ const ContactPage = () => {
                       focus:outline-none focus:border-[rgb(var(--tertiary))] 
                       focus:ring-1 focus:ring-[rgb(var(--tertiary))] 
                       transition-all duration-300
+                      text-base
                     "
                     placeholder="+1 (555) 000-0000"
                   />
@@ -274,6 +277,7 @@ const ContactPage = () => {
                       focus:outline-none focus:border-[rgb(var(--tertiary))] 
                       focus:ring-1 focus:ring-[rgb(var(--tertiary))] 
                       transition-all duration-300 resize-none
+                      text-base
                     "
                     placeholder="Tell us about your project..."
                   />
@@ -291,6 +295,8 @@ const ContactPage = () => {
                     hover:shadow-[0_0_30px_rgba(var(--tertiary),0.4)] 
                     hover:scale-[1.02] 
                     disabled:cursor-not-allowed disabled:opacity-60
+                    text-base sm:text-lg
+                    active:scale-[0.98]
                   "
                 >
                   <span
@@ -337,7 +343,7 @@ const ContactPage = () => {
                 </button>
 
                 {/* Trust badges */}
-                <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs opacity-50">
+                <div className="flex flex-wrap items-center justify-center gap-4 pt-4 text-xs opacity-50">
                   <div className="flex items-center gap-2 text-[rgb(var(--secondary))]">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
