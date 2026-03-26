@@ -93,7 +93,7 @@ const ContactPage = () => {
   ];
 
   return (
-    <section className="min-h-screen bg-[rgb(var(--secondary))] py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+    <section className="min-h-screen bg-[rgb(var(--secondary))] py-8 sm:py-12 px-2 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto overflow-hidden">
         <div
           className="
@@ -168,7 +168,7 @@ const ContactPage = () => {
           </div>
 
           {/* Right Side - Form */}
-          <div className="p-6 sm:p-8 lg:p-12 bg-[rgb(var(--primary))] backdrop-blur-sm">
+          <div className="p-4 sm:p-8 lg:p-12 bg-[rgb(var(--primary))] backdrop-blur-sm">
             <div className="max-w-lg mx-auto w-full">
               <div className="mb-6 sm:mb-8">
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[rgb(var(--secondary))] mb-2">
@@ -180,7 +180,6 @@ const ContactPage = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
-                {/* Name */}
                 <div>
                   <label className="block text-[rgb(var(--tertiary))] text-xs font-medium uppercase tracking-wider mb-2">
                     Full Name
@@ -300,9 +299,8 @@ const ContactPage = () => {
                   "
                 >
                   <span
-                    className={`flex items-center justify-center gap-2 transition-all duration-500 ${
-                      isSubmitting || isSubmitted ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
-                    }`}
+                    className={`flex items-center justify-center gap-2 transition-all duration-500 ${isSubmitting || isSubmitted ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
+                      }`}
                   >
                     Send Message
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
